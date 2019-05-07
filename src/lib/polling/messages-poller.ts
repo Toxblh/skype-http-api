@@ -234,6 +234,8 @@ function formatEventCallResource(
     ret.event_type = type;
   } else if (type === "ended") {
     ret.event_type = type;
+  } else if (type === "missed") {
+    ret.event_type = type;
   } else {
     throw new Error(`Unknown call state of: ${type}`);
   }
