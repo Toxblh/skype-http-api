@@ -4,10 +4,10 @@ import { addMemberToConversation } from "./api/add-member";
 import { createConversation } from "./api/create-conversation";
 import { declineContactRequest } from "./api/decline-contact-request";
 import { getContact } from "./api/get-contact";
-import { searchSkypedirectory } from "./api/search-directory";
 import { getConversation } from "./api/get-conversation";
 import { getConversations } from "./api/get-conversations";
 import { getJoinUrl } from "./api/get-join-url";
+import { searchSkypeDirectory } from "./api/search-directory";
 import { sendImage } from "./api/send-image";
 import { sendMessage } from "./api/send-message";
 import { setConversationTopic } from "./api/set-conversation-topic";
@@ -60,8 +60,8 @@ export class Api extends events.EventEmitter implements ApiEvents {
     return this.contactsService.getInvites(this.context);
   }
 
-  async searchSkypedirectory(contactId: string): Promise<string> {
-    return searchSkypedirectory(this.io, this.context, contactId);
+  async searchSkypeDirectory(contactId: string): Promise<String> {
+    return searchSkypeDirectory(this.io, this.context, contactId);
   }
 
   async getContact(contactId: string): Promise<_Contact> {
