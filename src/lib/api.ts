@@ -1,9 +1,10 @@
-import events from "events";
+import * as events from "events";
 import { acceptContactRequest } from "./api/accept-contact-request";
 import { addMemberToConversation } from "./api/add-member";
 import { createConversation } from "./api/create-conversation";
 import { declineContactRequest } from "./api/decline-contact-request";
 import { getContact } from "./api/get-contact";
+import { searchSkypedirectory } from "./api/search-directory";
 import { getConversation } from "./api/get-conversation";
 import { getConversations } from "./api/get-conversations";
 import { getJoinUrl } from "./api/get-join-url";
@@ -57,6 +58,10 @@ export class Api extends events.EventEmitter implements ApiEvents {
 
   async getContactInvites(): Promise<Invite[]> {
     return this.contactsService.getInvites(this.context);
+  }
+
+  async searchSkypedirectory(contactId: string): Promise<string> {
+    return searchSkypedirectory(this.io, this.context, contactId);
   }
 
   async getContact(contactId: string): Promise<_Contact> {
