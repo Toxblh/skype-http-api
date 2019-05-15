@@ -8,7 +8,7 @@ export interface CallParticipant {
 
 export declare type ResourceType = "Text" | "RichText" | "Control/ClearTyping" | "Control/Typing" | "RichText/UriObject"
   | "RichText/Media_GenericFile" | "Signal/Flamingo" | "Event/Call" | "RichText/Location" | "ConversationUpdate"
-  | "RichText/Media_Video";
+  | "RichText/Media_Video" | "RichText/Media_AudioMsg";
 
 export interface Resource {
   type: ResourceType;
@@ -54,12 +54,16 @@ export interface RichTextMediaVideoResource extends FileResource {
   type: "RichText/Media_Video";
 }
 
+export interface RichTextMediaAudioResource extends FileResource {
+  type: "RichText/Media_AudioMsg";
+}
+
 export interface RichTextUriObjectResource extends FileResource {
   type: "RichText/UriObject";
 }
 
 export interface EventCallResource extends Resource {
-  event_type: "started" | "ended" | "missed";
+  event_type: "started" | "ended";
   duration?: number; // duration of the shorted participant on the call
   call_connected: boolean; // if it was connected or missed
   skypeguid: string;

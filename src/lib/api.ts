@@ -1,4 +1,4 @@
-import * as events from "events";
+import events from "events";
 import { acceptContactRequest } from "./api/accept-contact-request";
 import { addMemberToConversation } from "./api/add-member";
 import { createConversation } from "./api/create-conversation";
@@ -8,7 +8,9 @@ import { getConversation } from "./api/get-conversation";
 import { getConversations } from "./api/get-conversations";
 import { getJoinUrl } from "./api/get-join-url";
 import { searchSkypeDirectory } from "./api/search-directory";
+import { sendAudio } from "./api/send-audio";
 import { sendImage } from "./api/send-image";
+import { sendDocument } from "./api/send-document";
 import { sendMessage } from "./api/send-message";
 import { setConversationTopic } from "./api/set-conversation-topic";
 import { setStatus } from "./api/set-status";
@@ -84,6 +86,10 @@ export class Api extends events.EventEmitter implements ApiEvents {
     return sendMessage(this.io, this.context, message, conversationId);
   }
 
+  async sendDocument(message: api.NewDocument, conversationId: string): Promise<api.SendMessageResult> {
+    return sendDocument(this.io, this.context, message, conversationId);
+  }
+
   async setConversationTopic(conversationId: string, topic: string): Promise<void> {
     return setConversationTopic(this.io, this.context, conversationId, topic);
   }
@@ -100,7 +106,11 @@ export class Api extends events.EventEmitter implements ApiEvents {
     return createConversation(this.io, this.context, allUsers);
   }
 
-  async sendImage(message: api.NewImage, conversationId: string): Promise<api.SendMessageResult> {
+  async sendAudio(message: api.NewMediaMessage, conversationId: string): Promise<api.SendMessageResult> {
+    return sendAudio(this.io, this.context, message, conversationId);
+  }
+
+  async sendImage(message: api.NewMediaMessage, conversationId: string): Promise<api.SendMessageResult> {
     return sendImage(this.io, this.context, message, conversationId);
   }
 
