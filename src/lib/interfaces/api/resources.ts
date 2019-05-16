@@ -63,7 +63,7 @@ export interface RichTextUriObjectResource extends FileResource {
 }
 
 export interface EventCallResource extends Resource {
-  event_type: "started" | "ended";
+  event_type: "started" | "ended" | "missed";
   duration?: number; // duration of the shorted participant on the call
   call_connected: boolean; // if it was connected or missed
   skypeguid: string;
