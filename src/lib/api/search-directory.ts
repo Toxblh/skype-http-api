@@ -48,7 +48,7 @@ export async function searchSkypeDirectory(io: io.HttpIo, apiContext: Context, c
 
   results.forEach(function (value: NodeData) {
     users.push({
-      skypeId: value.nodeProfileData.skypeId,
+      userComName: value.nodeProfileData.skypeId,
       name: value.nodeProfileData.name,
       avatarUrl: value.nodeProfileData.avatarUrl,
     });
