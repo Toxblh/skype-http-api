@@ -35,7 +35,7 @@ export async function searchSkypeDirectory(io: io.HttpIo, apiContext: Context, c
   }
   const body = JSON.parse(res.body);
   const results = body.results;
-  const users: any[] = [];
+  const searchResults: any[] = [];
 
   interface NodeData {
     nodeProfileData: ProfileData;
@@ -47,15 +47,12 @@ export async function searchSkypeDirectory(io: io.HttpIo, apiContext: Context, c
   }
 
   results.forEach(function (value: NodeData) {
-    users.push({
+    searchResults.push({
       userComName: value.nodeProfileData.skypeId,
       name: value.nodeProfileData.name,
       avatarUrl: value.nodeProfileData.avatarUrl,
     });
   });
-  const searchResults = { users };
 
   return JSON.parse(JSON.stringify(searchResults));
-  // return JSON.parse(res.body);
-
 }
