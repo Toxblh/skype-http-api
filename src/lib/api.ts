@@ -1,6 +1,8 @@
 import events from "events";
 import { acceptContactRequest } from "./api/accept-contact-request";
+import { addBotAsContact, removeBotFromContacts } from "./api/add-bot-as-contact";
 import { addMemberToConversation } from "./api/add-member";
+import { addUserAsContact, removeUserFromContacts } from "./api/add-user-as-contact";
 import { createConversation } from "./api/create-conversation";
 import { declineContactRequest } from "./api/decline-contact-request";
 import { getContact } from "./api/get-contact";
@@ -9,8 +11,8 @@ import { getConversations } from "./api/get-conversations";
 import { getJoinUrl } from "./api/get-join-url";
 import { searchSkypeDirectory } from "./api/search-directory";
 import { sendAudio } from "./api/send-audio";
-import { sendImage } from "./api/send-image";
 import { sendDocument } from "./api/send-document";
+import { sendImage } from "./api/send-image";
 import { sendMessage } from "./api/send-message";
 import { setConversationTopic } from "./api/set-conversation-topic";
 import { setStatus } from "./api/set-status";
@@ -68,6 +70,22 @@ export class Api extends events.EventEmitter implements ApiEvents {
 
   async getContact(contactId: string): Promise<_Contact> {
     return getContact(this.io, this.context, contactId);
+  }
+
+  async addBotToContact(contactId: string): Promise<boolean> {
+    return addBotAsContact(this.io, this.context, contactId);
+  }
+
+  async removeBotFromContacts(contactId: string): Promise<boolean> {
+    return removeBotFromContacts(this.io, this.context, contactId);
+  }
+
+  async addUserAsContact(contactId: string): Promise<boolean> {
+    return addUserAsContact(this.io, this.context, contactId);
+  }
+
+  async removeUserFromContacts(contactId: string): Promise<boolean> {
+    return removeUserFromContacts(this.io, this.context, contactId);
   }
 
   async getContacts(): Promise<Contact[]> {

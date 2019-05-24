@@ -1,3 +1,4 @@
+import { $Ucs2String } from "kryo/builtins/ucs2-string";
 import { CaseStyle } from "kryo/case-style";
 import { ArrayType } from "kryo/types/array";
 import { DocumentType } from "kryo/types/document";
@@ -61,6 +62,7 @@ export const $ContactProfile: DocumentType<ContactProfile> = new DocumentType<Co
     about: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
     website: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
     language: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
+    skype_handle: {type: $Ucs2String, optional: true},
   },
   changeCase: CaseStyle.SnakeCase,
   noExtraKeys: true,

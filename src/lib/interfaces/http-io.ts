@@ -1,5 +1,4 @@
-import { Store as CookieStore } from "tough-cookie";
-
+import {Store as CookieStore } from "tough-cookie";
 export interface BaseOptions {
   uri: string;
   cookies?: CookieStore;
@@ -18,6 +17,8 @@ export interface PostOptions extends BaseOptions {
 
 export type PutOptions = PostOptions;
 
+export type DeleteOptions = PostOptions;
+
 export interface Response {
   statusCode: number;
   body: string;
@@ -30,4 +31,6 @@ export interface HttpIo {
   post(options: PostOptions): Promise<Response>;
 
   put(options: PutOptions): Promise<Response>;
+
+  del(options: DeleteOptions): Promise<Response>;
 }

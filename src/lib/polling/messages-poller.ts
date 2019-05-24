@@ -242,16 +242,15 @@ function formatEventCallResource(
   const ret: resources.EventCallResource = retObj as resources.EventCallResource;
   const $: CheerioStatic = cheerio.load(native.content);
   const type: string = $("partlist").attr("type");
-  if (type === "started") {
-    ret.event_type = type;
-  } else if (type === "ended") {
-    ret.event_type = type;
-  } else if (type === "missed") {
-    ret.event_type = type;
-  } else {
-    throw new Error(`Unknown call state of: ${type}`);
+  switch (type) {
+    case "started":
+    case "ended":
+    case "missed":
+      ret.event_type = type;
+      break;
+    default:
+      throw new Error(`Unknown call state of: ${type}`);
   }
-
   let shortest: number | null = null;
   let connected: boolean = false;
   const participants: resources.CallParticipant[] = [];
@@ -367,7 +366,7 @@ export class MessagesPoller extends _events.EventEmitter {
         return;
       }
 
-      const body: {eventMessages?: nativeEvents.EventMessage[]} = JSON.parse(res.body);
+      const body: { eventMessages?: nativeEvents.EventMessage[] } = JSON.parse(res.body);
 
       if (body.eventMessages !== undefined) {
         for (const msg of body.eventMessages) {

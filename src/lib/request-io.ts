@@ -8,7 +8,8 @@ import * as io from "./interfaces/http-io";
  * @param ioOptions Implementation independent IO options
  * @returns {request.Options} Corresponding `request` options
  */
-function asRequestOptions(ioOptions: io.GetOptions | io.PostOptions | io.PutOptions): request.Options {
+function asRequestOptions(ioOptions: io.GetOptions | io.PostOptions | io.PutOptions
+  | io.DeleteOptions): request.Options {
   const result: request.Options = {...<any> ioOptions};
   if (ioOptions.queryString !== undefined) {
     delete (result as any).queryString;
@@ -99,8 +100,35 @@ export async function put(options: io.PutOptions): Promise<io.Response> {
   });
 }
 
+/**
+ * Send a DELETE request
+ *
+ * @param options
+ */
+export async function del(options: io.DeleteOptions): Promise<io.Response> {
+  return new Promise<io.Response>((resolve, reject) => {
+    request.delete(asRequestOptions(options), (error, response, body) => {
+      if (error) {
+        return reject(error);
+      }
+      if (response.statusCode === undefined) {
+        return reject(new Error("Missing status code"));
+      }
+
+      const ioResponse: io.Response = {
+        statusCode: response.statusCode,
+        body,
+        headers: response.headers,
+      };
+
+      resolve(ioResponse);
+    });
+  });
+}
+
 export const requestIo: io.HttpIo = {
   get,
   post,
   put,
+  del,
 };

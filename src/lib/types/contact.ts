@@ -64,6 +64,7 @@ export const $Contact: DocumentType<Contact> = new DocumentType<Contact>({
     authorized: {type: new BooleanType()},
     authCertificate: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
     blocked: {type: new BooleanType()},
+    explicit: {type: new BooleanType(), optional: true},
     creationTime: {type: new DateType()},
     relationshipHistory: {type: $RelationshipHistory, optional: true},
     suggested: {type: new BooleanType(), optional: true},

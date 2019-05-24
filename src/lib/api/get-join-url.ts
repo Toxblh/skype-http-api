@@ -2,7 +2,6 @@ import { Incident } from "incident";
 import { Context } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
 import { Join } from "../interfaces/native-api/conversation";
-import * as messagesUri from "../messages-uri";
 
 interface RequestBody {
   baseDomain: "https://join.skype.com/launch/" | string;

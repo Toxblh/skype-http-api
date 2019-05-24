@@ -102,6 +102,27 @@ async function runExample(): Promise<void> {
   await api.listen();
   await api.setStatus("Online");
   console.log("Ready");
+
+  // Check if the Skype Bot, and Skype Echo are already added as contacts
+  console.log("Adding Skype bot as contact");
+  const skypeTranslatorBot: string = "0d5d6cff-595d-49d7-9cf8-973173f5233b";
+  const addBot: boolean = await api.addBotToContact(skypeTranslatorBot);
+  if (addBot) {
+    console.log("Removing Skype bot from contacts");
+    await api.removeBotFromContacts(skypeTranslatorBot);
+  }
+
+  console.log("Adding Skype Echo as contact");
+  const echoSoundTest: string = "8:echo123";
+  const wasContactAdded: boolean = await api.addUserAsContact(echoSoundTest);
+  if (wasContactAdded) {
+    console.log("Removing Skype Echo from contacts");
+    await api.removeUserFromContacts(echoSoundTest);
+  }
+
+  console.log("Searching Skype directory");
+  const searchResults: String = await api.searchSkypeDirectory("testing");
+  console.log(searchResults);
 }
 
 runExample()
