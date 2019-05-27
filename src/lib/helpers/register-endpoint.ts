@@ -55,6 +55,7 @@ function getLockAndKeyHeader(time: number): string {
  * @param messagesHostname Hostname of the messages server.
  * @param retries Number of request retries before emitting an error. Example: if `retries` is `1`, this function
  *                will send 1 or 2 requests.
+ * @param proxy proxy to use
  * @return Registration token
  * @throws [[EndpointRegistrationError]]
  */
@@ -64,6 +65,7 @@ export async function registerEndpoint(
   skypeToken: SkypeToken,
   messagesHostname: string,
   retries: number = 2,
+  proxy?: string,
 ): Promise<RegistrationToken> {
   // TODO: Use this array to report all the requests and responses in case of failure
   const tries: {req: io.PostOptions; res: io.Response}[] = [];
@@ -72,6 +74,7 @@ export async function registerEndpoint(
   for (let tryCount: number = 0; tryCount <= retries; tryCount++) {
     const req: io.PostOptions = {
       uri: messagesUri.endpoints(messagesHostname),
+      proxy,
       headers: {
         LockAndKey: getLockAndKeyHeader(utils.getCurrentTime()),
         // TODO(demurgos, 2017-11-12): Remove the `ClientHeader` header, SkPy does not send it.

@@ -19,6 +19,7 @@ export async function setStatus(io: io.HttpIo, apiContext: Context, status: api.
     headers: {
       RegistrationToken: apiContext.registrationToken.raw,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.put(requestOptions);
 

@@ -35,6 +35,7 @@ export async function sendMessage(
     headers: {
       RegistrationToken: apiContext.registrationToken.raw,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.post(requestOptions);
 

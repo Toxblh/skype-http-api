@@ -19,6 +19,10 @@ function asRequestOptions(ioOptions: io.GetOptions | io.PostOptions | io.PutOpti
     delete (result as any).cookies;
     result.jar = request.jar(ioOptions.cookies);
   }
+  if (ioOptions.proxy !== undefined) {
+    delete (result as any).proxy;
+    result.proxy = ioOptions.proxy;
+  }
   return result;
 }
 

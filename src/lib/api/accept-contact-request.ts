@@ -10,6 +10,7 @@ export async function acceptContactRequest(io: io.HttpIo, apiContext: Context, c
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.put(requestOptions);
   if (res.statusCode !== 200) {

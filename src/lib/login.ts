@@ -19,6 +19,7 @@ export interface LoginOptions {
   io: io.HttpIo;
   credentials: Credentials;
   verbose?: boolean;
+  proxy?: string;
 }
 
 /**
@@ -45,12 +46,13 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
     },
     httpIo: options.io,
     cookies,
+    proxy: options.proxy,
   });
   if (options.verbose) {
     console.log("Acquired SkypeToken");
   }
 
-  const profile: ApiProfile = await getSelfProfile(options.io, cookies, skypeToken);
+  const profile: ApiProfile = await getSelfProfile(options.io, cookies, skypeToken, options.proxy);
   const username: string = profile.username;
 
   if (options.verbose) {
@@ -62,17 +64,19 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
     ioOptions.cookies,
     skypeToken,
     Consts.SKYPEWEB_DEFAULT_MESSAGES_HOST,
+    undefined,
+    options.proxy,
   );
   if (options.verbose) {
     console.log("Acquired RegistrationToken");
   }
 
-  await subscribeToResources(ioOptions, registrationToken);
+  await subscribeToResources(ioOptions, registrationToken, options.proxy);
   if (options.verbose) {
     console.log("Subscribed to resources");
   }
 
-  await createPresenceDocs(ioOptions, registrationToken);
+  await createPresenceDocs(ioOptions, registrationToken, options.proxy);
   if (options.verbose) {
     console.log("Created presence docs");
   }
@@ -82,10 +86,11 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
     skypeToken,
     cookies,
     registrationToken,
+    proxy: options.proxy,
   };
 }
 
-async function subscribeToResources(ioOptions: IoOptions, registrationToken: RegistrationToken): Promise<void> {
+async function subscribeToResources(ioOptions: IoOptions, registrationToken: RegistrationToken, proxy?: string): Promise<void> {
   // TODO(demurgos): typedef
   // tslint:disable-next-line:typedef
   const requestDocument = {
@@ -103,6 +108,7 @@ async function subscribeToResources(ioOptions: IoOptions, registrationToken: Reg
     uri: messagesUri.subscriptions(registrationToken.host),
     cookies: ioOptions.cookies,
     body: JSON.stringify(requestDocument),
+    proxy,
     headers: {
       RegistrationToken: registrationToken.raw,
     },
@@ -133,7 +139,7 @@ async function subscribeToResources(ioOptions: IoOptions, registrationToken: Reg
 
 }
 
-async function createPresenceDocs(ioOptions: IoOptions, registrationToken: RegistrationToken): Promise<any> {
+async function createPresenceDocs(ioOptions: IoOptions, registrationToken: RegistrationToken, proxy?: string): Promise<any> {
   // this is the exact json that is needed to register endpoint for setting of status.
   // demurgos: If I remember well enough, it's order dependant.
   // TODO: typedef
@@ -164,6 +170,7 @@ async function createPresenceDocs(ioOptions: IoOptions, registrationToken: Regis
     uri,
     cookies: ioOptions.cookies,
     body: JSON.stringify(requestBody),
+    proxy,
     headers: {
       RegistrationToken: registrationToken.raw,
     },

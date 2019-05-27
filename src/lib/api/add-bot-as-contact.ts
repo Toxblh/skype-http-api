@@ -10,6 +10,7 @@ export async function addBotAsContact(io: io.HttpIo,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.put(requestOptions);
 
@@ -29,6 +30,7 @@ export async function removeBotFromContacts(io: io.HttpIo,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.del(requestOptions);
 

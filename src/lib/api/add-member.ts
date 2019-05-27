@@ -27,6 +27,7 @@ export async function addMemberToConversation(
       "RegistrationToken": apiContext.registrationToken.raw,
       "Content-type": "application/json",
     },
+    proxy: apiContext.proxy,
   };
 
   const res: io.Response = await io.put(requestOptions);

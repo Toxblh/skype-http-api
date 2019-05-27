@@ -24,6 +24,7 @@ export async function getJoinUrl(io: io.HttpIo, apiContext: Context, conversatio
         "X-Skypetoken": apiContext.skypeToken.value,
         "Content-Type": "application/json",
     },
+    proxy: apiContext.proxy,
   };
 
   const res: io.Response = await io.post(requestOptions);

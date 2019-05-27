@@ -47,6 +47,7 @@ export interface LoginOptions {
   credentials: Credentials;
   httpIo: io.HttpIo;
   cookies: toughCookie.Store;
+  proxy?: string;
 }
 
 export async function login(options: LoginOptions): Promise<SkypeToken> {
@@ -59,12 +60,14 @@ export async function login(options: LoginOptions): Promise<SkypeToken> {
       httpIo: options.httpIo,
       cookies: options.cookies,
       liveKeys,
+      proxy: options.proxy,
     });
 
     return getSkypeToken({
       liveToken,
       cookies: options.cookies,
       httpIo: options.httpIo,
+      proxy: options.proxy,
     });
   } catch (_err) {
     const err: MicrosoftAccountLoginError.Cause = _err;
@@ -198,6 +201,7 @@ export interface GetLiveTokenOptions {
   liveKeys: LiveKeys;
   httpIo: io.HttpIo;
   cookies: toughCookie.Store;
+  proxy?: string;
 }
 
 export async function getLiveToken(options: GetLiveTokenOptions): Promise<string> {
@@ -253,6 +257,7 @@ export async function requestLiveToken(options: GetLiveTokenOptions): Promise<io
     queryString,
     cookies: options.cookies,
     form: formData,
+    proxy: options.proxy,
   };
 
   try {
@@ -290,6 +295,7 @@ export interface GetSkypeTokenOptions {
   liveToken: string;
   httpIo: io.HttpIo;
   cookies: toughCookie.Store;
+  proxy?: string;
 }
 
 /**
@@ -340,6 +346,7 @@ export async function requestSkypeToken(options: GetSkypeTokenOptions): Promise<
     uri,
     queryString,
     form: formData,
+    proxy: options.proxy,
   };
 
   try {

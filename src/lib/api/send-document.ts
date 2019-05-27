@@ -41,6 +41,7 @@ export async function sendDocument(
       "Content-Length": bodyNewObjectStr.length.toString(10),
       "X-Client-Version": "0/0.0.0.0",
     },
+    proxy: apiContext.proxy,
   };
 
   const resNewObject: io.Response = await io.post(requestOptionsNewObject);
@@ -59,6 +60,7 @@ export async function sendDocument(
       "Content-Type": "application",
       "Content-Length": file.length.toString(10),
     },
+    proxy: apiContext.proxy,
   };
 
   const resObject: io.Response = await io.put(requestOptionsPutObject);
@@ -89,6 +91,7 @@ export async function sendDocument(
     headers: {
       RegistrationToken: apiContext.registrationToken.raw,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.post(requestOptions);
 

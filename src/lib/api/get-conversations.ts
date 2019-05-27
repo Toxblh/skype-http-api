@@ -37,6 +37,7 @@ export async function getConversations(io: io.HttpIo, apiContext: Context): Prom
     headers: {
       RegistrationToken: apiContext.registrationToken.raw,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.get(requestOptions);
 

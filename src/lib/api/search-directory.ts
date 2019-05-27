@@ -17,6 +17,7 @@ export async function searchSkypeDirectory(io: io.HttpIo,
     uri: `https://skypegraph.skype.com/v2.0/search?searchString=${userId}
     &requestId=${Math.round((new Date()).getTime())}`,
     cookies: apiContext.cookies,
+    proxy: apiContext.proxy,
     headers: {
       "Origin": "https://preview.web.skype.com",
       "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 " +

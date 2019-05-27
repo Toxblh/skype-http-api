@@ -45,6 +45,7 @@ export class ContactsService {
       headers: {
         "X-Skypetoken": apiContext.skypeToken.value,
       },
+      proxy: apiContext.proxy,
     };
     const response: io.Response = await this.httpIo.get(request);
     if (response.statusCode !== 200) {
