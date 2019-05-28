@@ -14,6 +14,7 @@ export async function declineContactRequest(
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.put(requestOptions);
 

@@ -101,6 +101,7 @@ export interface Context {
   cookies: toughCookie.Store;
   skypeToken: SkypeToken;
   registrationToken: RegistrationToken;
+  proxy?: string;
 }
 
 export namespace Context {

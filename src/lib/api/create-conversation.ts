@@ -31,6 +31,7 @@ export async function createConversation(
       RegistrationToken: apiContext.registrationToken.raw,
       Location: "/",
     },
+    proxy: apiContext.proxy,
   };
 
   const res: io.Response = await io.post(requestOptions);

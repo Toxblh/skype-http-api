@@ -357,6 +357,7 @@ export class MessagesPoller extends _events.EventEmitter {
         headers: {
           RegistrationToken: this.apiContext.registrationToken.raw,
         },
+        proxy: this.apiContext.proxy,
       };
       const res: httpIo.Response = await this.io.post(requestOptions);
 

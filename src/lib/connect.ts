@@ -13,6 +13,7 @@ export interface ConnectOptions {
   credentials?: Credentials;
   state?: Context.Json;
   verbose?: boolean;
+  proxy?: string;
 }
 
 /**
@@ -31,6 +32,7 @@ export async function connect(options: ConnectOptions): Promise<api.Api> {
       io: requestIo,
       credentials: options.credentials,
       verbose: options.verbose,
+      proxy: options.proxy,
     });
     if (options.verbose) {
       console.log("Obtained context trough authentication:");

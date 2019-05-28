@@ -25,6 +25,7 @@ export async function addUserAsContact(io: io.HttpIo,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.put(requestOptions);
 
@@ -50,6 +51,7 @@ export async function removeUserFromContacts(io: io.HttpIo,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.put(requestOptions);
 

@@ -19,6 +19,7 @@ export async function getContact(io: io.HttpIo, apiContext: Context, contactId: 
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.post(requestOptions);
   if (res.statusCode !== 200) {

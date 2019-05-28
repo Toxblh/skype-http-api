@@ -50,6 +50,7 @@ export async function getConversation(
     headers: {
       RegistrationToken: apiContext.registrationToken.raw,
     },
+    proxy: apiContext.proxy,
   };
   const res: io.Response = await io.get(requestOptions);
 

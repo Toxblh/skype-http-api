@@ -12,6 +12,7 @@ export async function getSelfProfile(
   httpIo: io.HttpIo,
   cookies: toughCookie.Store,
   skypeToken: SkypeToken,
+  proxy?: string,
 ): Promise<ApiProfile> {
   const url: Url = apiUri.userProfile(apiUri.DEFAULT_USER);
   const request: io.GetOptions = {
@@ -20,6 +21,7 @@ export async function getSelfProfile(
     headers: {
       "X-Skypetoken": skypeToken.value,
     },
+    proxy,
   };
   const response: io.Response = await httpIo.get(request);
   if (response.statusCode !== 200) {

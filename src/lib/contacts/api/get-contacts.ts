@@ -18,6 +18,7 @@ export async function getContacts(httpIo: io.HttpIo, apiContext: Context): Promi
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
+    proxy: apiContext.proxy,
   };
   const response: io.Response = await httpIo.get(request);
   if (response.statusCode !== 200) {

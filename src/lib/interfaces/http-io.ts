@@ -4,6 +4,7 @@ export interface BaseOptions {
   cookies?: CookieStore;
   headers?: any; // {[name: string]: string};
   queryString?: any; // {[key: string]: string};
+  proxy?: string;
 }
 
 export interface GetOptions extends BaseOptions {
