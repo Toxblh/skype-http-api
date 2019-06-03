@@ -7,6 +7,7 @@ import * as getLiveKeysErrors from "../errors/microsoft-account/get-live-keys";
 import * as getLiveTokenErrors from "../errors/microsoft-account/get-live-token";
 import * as getSkypeTokenErrors from "../errors/microsoft-account/get-skype-token";
 import { MicrosoftAccountLoginError } from "../errors/microsoft-account/login";
+import { ProxyConnectionError } from "../errors/proxy-connection-error";
 import { WrongCredentialsError } from "../errors/wrong-credentials";
 import { WrongCredentialsLimitError } from "../errors/wrong-credentials-limit";
 import { SkypeToken } from "../interfaces/api/context";
@@ -283,6 +284,8 @@ export function scrapLiveToken(html: string): string {
       /* tslint:disable-next-line:max-line-length */
     } else if (html.indexOf("sErrTxt:\"You\\'ve tried to sign in too many times with an incorrect account or password.\"") >= 0) {
       throw WrongCredentialsLimitError.create();
+    } else if (html.indexOf("recover?mkt") >= 0) {
+      throw ProxyConnectionError.create();
     } else {
       // TODO(demurgos): Check if there is a PPFT token (redirected to the getLiveKeys response)
       throw getLiveTokenErrors.LiveTokenNotFoundError.create(html);
