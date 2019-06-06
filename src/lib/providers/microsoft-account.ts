@@ -2,13 +2,16 @@ import cheerio from "cheerio";
 import path from "path";
 import toughCookie from "tough-cookie";
 import url from "url";
+import { AccountRecoverRestriction } from "../errors/account-recover-restriction";
 import * as httpErrors from "../errors/http";
+import { IdentityCheckRequired } from "../errors/identity-check-required";
 import * as getLiveKeysErrors from "../errors/microsoft-account/get-live-keys";
 import * as getLiveTokenErrors from "../errors/microsoft-account/get-live-token";
 import * as getSkypeTokenErrors from "../errors/microsoft-account/get-skype-token";
 import { MicrosoftAccountLoginError } from "../errors/microsoft-account/login";
 import { WrongCredentialsError } from "../errors/wrong-credentials";
 import { WrongCredentialsLimitError } from "../errors/wrong-credentials-limit";
+
 import { SkypeToken } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
 
@@ -117,7 +120,7 @@ export interface LiveKeys {
 export async function getLiveKeys(options: LoadLiveKeysOptions): Promise<LiveKeys> {
   try {
     const uri: string = url.resolve(skypeLoginUri, path.posix.join("oauth", "microsoft"));
-    const queryString: {[key: string]: string} = {
+    const queryString: { [key: string]: string } = {
       client_id: webClientLiveLoginId,
       redirect_uri: skypeWebUri,
     };
@@ -230,7 +233,7 @@ export async function getLiveToken(options: GetLiveTokenOptions): Promise<string
 // Get live token from live keys and credentials
 export async function requestLiveToken(options: GetLiveTokenOptions): Promise<io.Response> {
   const uri: string = url.resolve(liveLoginUri, path.posix.join("ppsecure", "post.srf"));
-  const queryString: {[key: string]: string} = {
+  const queryString: { [key: string]: string } = {
     wa: "wsignin1.0",
     wp: "MBI_SSL",
     // tslint:disable-next-line:max-line-length
@@ -283,6 +286,10 @@ export function scrapLiveToken(html: string): string {
       /* tslint:disable-next-line:max-line-length */
     } else if (html.indexOf("sErrTxt:\"You\\'ve tried to sign in too many times with an incorrect account or password.\"") >= 0) {
       throw WrongCredentialsLimitError.create();
+    } else if (html.indexOf("identity/confirm") >= 0) {
+      throw IdentityCheckRequired.create();
+    } else if (html.indexOf("account.live.com/recover?") >= 0) {
+      throw AccountRecoverRestriction.create();
     } else {
       // TODO(demurgos): Check if there is a PPFT token (redirected to the getLiveKeys response)
       throw getLiveTokenErrors.LiveTokenNotFoundError.create(html);
@@ -329,12 +336,12 @@ export async function getSkypeToken(options: GetSkypeTokenOptions): Promise<Skyp
 export async function requestSkypeToken(options: GetSkypeTokenOptions): Promise<io.Response> {
   const uri: string = url.resolve(skypeLoginUri, "microsoft");
 
-  const queryString: {[key: string]: string} = {
+  const queryString: { [key: string]: string } = {
     client_id: "578134",
     redirect_uri: "https://web.skype.com",
   };
 
-  const formData: {[key: string]: string} = {
+  const formData: { [key: string]: string } = {
     t: options.liveToken,
     client_id: "578134",
     oauthPartner: "999",
