@@ -39,7 +39,7 @@ export async function sendMessage(
   };
   const res: io.Response = await io.post(requestOptions);
 
-  console.log(JSON.stringify(res, null, 2));
+  // console.log(JSON.stringify(res, null, 2));
   if (res.statusCode !== 201) {
     return Promise.reject(new Incident("send-message", "Received wrong return code"));
   }
