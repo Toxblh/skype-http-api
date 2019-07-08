@@ -68,6 +68,7 @@ export interface Text extends MessageResource {
   messagetype: "Text";
   clientmessageid: string; // A large integer (~20 digits)
   content: string;
+  properties: string;
 }
 
 export interface RichText extends MessageResource {

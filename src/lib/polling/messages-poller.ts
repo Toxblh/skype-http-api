@@ -14,6 +14,8 @@ import * as messagesUri from "../messages-uri";
 
 // Perform one request every 1000 ms
 const POLLING_DELAY: number = 1000;
+let lastMsgId: number = 0;
+let notifUri: string;
 
 // Match a contact id:
 // TODO: handle the "guest" prefix
@@ -49,6 +51,7 @@ export function formatTextResource(
   const ret: resources.TextResource = retObj as resources.TextResource;
   ret.content = nativeResource.content;
   ret.clientId = nativeResource.clientmessageid;
+  ret.properties = nativeResource.properties;
   return ret;
 }
 
@@ -329,7 +332,9 @@ export class MessagesPoller extends _events.EventEmitter {
     if (this.isActive()) {
       return this;
     }
+    // this doesn't look right
     this.intervalId = setInterval(this.getMessages.bind(this), POLLING_DELAY);
+    this.intervalId = setInterval(this.getNotifications.bind(this), POLLING_DELAY);
     return this;
   }
 
@@ -350,9 +355,12 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
+      const uri: string = (messagesUri.poll(this.apiContext.registrationToken.host)
+        + (lastMsgId > 0 ? "?ackId=" + lastMsgId : ""));
+      // console.log(uri);
       const requestOptions: httpIo.PostOptions = {
         // TODO: explicitly define user, endpoint and subscription
-        uri: messagesUri.poll(this.apiContext.registrationToken.host),
+        uri,
         cookies: this.apiContext.cookies,
         headers: {
           RegistrationToken: this.apiContext.registrationToken.raw,
@@ -374,7 +382,7 @@ export class MessagesPoller extends _events.EventEmitter {
           // tslint:disable-next-line:max-line-length
           // if (msg.resourceType != "UserPresence" && msg.resourceType != "EndpointPresence" && msg.resourceType != "ConversationUpdate")
           //  console.log("EVT: " + JSON.stringify(msg, null, "\t"));
-
+          lastMsgId = msg.id;
           const formatted: events.EventMessage = formatEventMessage(msg);
           if (formatted.resource !== null) {
             this.emit("event-message", formatted);
@@ -383,6 +391,44 @@ export class MessagesPoller extends _events.EventEmitter {
       }
     } catch (err) {
       this.emit("error", Incident(err, "poll", "An error happened while processing the polled messages"));
+    }
+  }
+
+  protected async getNotifications(): Promise<void> {
+    try {
+      notifUri = notifUri ? notifUri : messagesUri.notifications(this.apiContext);
+      // console.log(notifUri);
+      const requestOptions: httpIo.GetOptions = {
+        uri: notifUri,
+        cookies: this.apiContext.cookies,
+        headers: {
+          Authentication: "skypetoken=" + this.apiContext.skypeToken.value,
+        },
+        proxy: this.apiContext.proxy,
+      };
+      const res: httpIo.Response = await this.io.get(requestOptions);
+
+      if (res.statusCode !== 200) {
+        const cause: UnexpectedHttpStatusError = UnexpectedHttpStatusError.create(res, new Set([200]), requestOptions);
+        this.emit("error", Incident(cause, "poll", "Unable to poll the notifications"));
+        return;
+      }
+
+      const body: { eventMessages?: nativeEvents.EventMessage[]; next?: string } = JSON.parse(res.body);
+      if (body.eventMessages !== undefined) {
+        for (const msg of body.eventMessages) {
+          lastMsgId = msg.id;
+          const formatted: events.EventMessage = formatEventMessage(msg);
+          if (formatted.resource !== null) {
+            this.emit("event-message", formatted);
+          }
+        }
+      }
+      if (body.next) {
+        notifUri = body.next;
+      }
+    } catch (err) {
+      this.emit("error", Incident(err, "poll", "An error happened while processing the polled notifications"));
     }
   }
 }

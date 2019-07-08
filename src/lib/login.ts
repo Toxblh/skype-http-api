@@ -99,6 +99,8 @@ async function subscribeToResources(ioOptions: IoOptions, registrationToken: Reg
       "/v1/users/ME/contacts/ALL",
       "/v1/users/ME/conversations/ALL/messages",
       "/v1/users/ME/conversations/ALL/properties",
+      "/v1/users/ME/endpoints/SELF/signals",
+      "/v1/users/ME/conversations/ALL/properties?view=consumptionHorizon",
     ],
     template: "raw",
     channelType: "httpLongPoll", // TODO: use websockets ?

@@ -24,6 +24,7 @@ export interface TextResource extends Resource {
   type: "Text";
   clientId: string; // An id set by the client
   content: string;
+  properties: string;
 }
 
 export interface RichTextLocationResource extends Resource {
