@@ -1,4 +1,4 @@
-import {Store as CookieStore } from "tough-cookie";
+import { Store as CookieStore } from "tough-cookie";
 export interface BaseOptions {
   uri: string;
   cookies?: CookieStore;

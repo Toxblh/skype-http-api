@@ -1,7 +1,7 @@
 import cheerio from "cheerio";
 import _events from "events";
 import { Incident } from "incident";
-import { UnexpectedHttpStatusError } from "../errors/http";
+import { UnexpectedHttpStatusError } from "../errors";
 import { ParsedConversationId } from "../interfaces/api/api";
 import { Context as ApiContext } from "../interfaces/api/context";
 import * as events from "../interfaces/api/events";
@@ -12,9 +12,7 @@ import * as nativeMessageResources from "../interfaces/native-api/message-resour
 import * as nativeResources from "../interfaces/native-api/resources";
 import * as messagesUri from "../messages-uri";
 
-// Perform one request every 1000 ms
-const POLLING_DELAY: number = 1000;
-let lastMsgId: number = 0;
+let lastMsgId: number = 0; // this is used to make the next poll request
 let notifUri: string;
 
 // Match a contact id:
@@ -52,6 +50,8 @@ export function formatTextResource(
   ret.content = nativeResource.content;
   ret.clientId = nativeResource.clientmessageid;
   ret.properties = nativeResource.properties;
+  const propsObj: any = nativeResource.properties;
+  ret.callLog = propsObj ? JSON.parse(propsObj["call-log"]) : {};
   return ret;
 }
 
@@ -100,7 +100,6 @@ export function formatConversationUpdateResource(nativeResource: nativeResources
     content: nativeResource.lastMessage.content,
   };
 }
-
 // tslint:disable-next-line:max-line-length
 export function formatControlTypingResource(
   retObj: resources.Resource,
@@ -117,6 +116,16 @@ export function formatSignalFlamingoResource(
 ): resources.SignalFlamingoResource {
   const ret: resources.SignalFlamingoResource = retObj as resources.SignalFlamingoResource;
   ret.skypeguid = nativeResource.skypeguid;
+  return ret;
+}
+
+// tslint:disable-next-line:max-line-length
+export function formatMemberConsumptionHorizonUpdateResource(
+  retObj: resources.Resource,
+  nativeResource: nativeMessageResources.MemberConsumptionHorizonUpdate,
+): resources.MemberConsumptionHorizonUpdateResource {
+  const ret: resources.MemberConsumptionHorizonUpdateResource
+    = retObj as resources.MemberConsumptionHorizonUpdateResource;
   return ret;
 }
 
@@ -155,6 +164,9 @@ function formatMessageResource(nativeResource: nativeResources.MessageResource):
     case "Signal/Flamingo": // incoming call request
       // tslint:disable-next-line:max-line-length
       return formatSignalFlamingoResource(formatGenericMessageResource(nativeResource, nativeResource.messagetype), <nativeMessageResources.SignalFlamingo> nativeResource);
+    case "ThreadActivity/MemberConsumptionHorizonUpdate":
+      // tslint:disable-next-line:max-line-length
+      return formatMemberConsumptionHorizonUpdateResource(formatGenericMessageResource(nativeResource, nativeResource.messagetype), <nativeMessageResources.MemberConsumptionHorizonUpdate> nativeResource);
     default:
       // tslint:disable-next-line:max-line-length
       throw new Error(`Unknown ressource.messageType (${JSON.stringify(nativeResource.messagetype)}) for resource:\n${JSON.stringify(nativeResource, null, "\t")}`);
@@ -314,27 +326,29 @@ function formatEventMessage(native: nativeEvents.EventMessage): events.EventMess
 export class MessagesPoller extends _events.EventEmitter {
   io: httpIo.HttpIo;
   apiContext: ApiContext;
-  intervalId: number | NodeJS.Timer | null;
+  activeState: boolean | false;
 
   constructor(io: httpIo.HttpIo, apiContext: ApiContext) {
     super();
 
     this.io = io;
     this.apiContext = apiContext;
-    this.intervalId = null;
+    this.activeState = false;
   }
 
   isActive(): boolean {
-    return this.intervalId !== null;
+    return this.activeState;
   }
 
   run(): this {
     if (this.isActive()) {
       return this;
     }
-    // this doesn't look right
-    this.intervalId = setInterval(this.getMessages.bind(this), POLLING_DELAY);
-    this.intervalId = setInterval(this.getNotifications.bind(this), POLLING_DELAY);
+    this.activeState = true;
+    // moved from setInterval to setTimeout as the request
+    // may resolve in ±1minute if no new messages / notifications are available
+    this.getMessagesLoop();
+    this.getNotificationsLoop();
     return this;
   }
 
@@ -342,11 +356,30 @@ export class MessagesPoller extends _events.EventEmitter {
     if (!this.isActive()) {
       return this;
     }
-    clearInterval(<any> this.intervalId);
-    this.intervalId = null;
+    this.activeState = false;
+    // 1 more response will still be returned after stopping the listener
     return this;
   }
-
+  protected getMessagesLoop() {
+    // tslint:disable
+    const that: any = this;
+    if (this.isActive()) {
+      setTimeout(async function () {
+          await that.getMessages();
+        that.getMessagesLoop();
+      }, 0);
+    }
+  }
+  protected getNotificationsLoop() {
+    const that: any = this;
+    if (this.isActive()) {
+      setTimeout(async function () {
+        await that.getNotifications();
+        that.getNotificationsLoop();
+      }, 2000); //
+    }
+    // tslint:enable
+  }
   /**
    * Get the new messages / events from the server.
    * This function always returns a successful promise once the messages are retrieved or an error happens.
@@ -355,7 +388,7 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
-      const uri: string = (messagesUri.poll(this.apiContext.registrationToken.host)
+      const uri: string = (messagesUri.poll(this.apiContext)
         + (lastMsgId > 0 ? "?ackId=" + lastMsgId : ""));
       // console.log(uri);
       const requestOptions: httpIo.PostOptions = {
@@ -393,11 +426,24 @@ export class MessagesPoller extends _events.EventEmitter {
       this.emit("error", Incident(err, "poll", "An error happened while processing the polled messages"));
     }
   }
-
+  /**
+   * Get the new messages / notifications from the server, this is used to get messages that are not
+   * returned by the old poll endpoint (ex. end call when initiator is on mobile).
+   * This function always returns a successful promise once the messages are retrieved or an error happens.
+   *
+   * If any error happens, the message-poller will emit an `error` event with the error.
+   */
   protected async getNotifications(): Promise<void> {
     try {
+      let nextNotifUri: string = "";
+      if (notifUri && notifUri === nextNotifUri) {
+        notifUri = messagesUri.notifications(this.apiContext);
+      } else {
+        notifUri = nextNotifUri;
+      }
+
       notifUri = notifUri ? notifUri : messagesUri.notifications(this.apiContext);
-      // console.log(notifUri);
+
       const requestOptions: httpIo.GetOptions = {
         uri: notifUri,
         cookies: this.apiContext.cookies,
@@ -425,7 +471,7 @@ export class MessagesPoller extends _events.EventEmitter {
         }
       }
       if (body.next) {
-        notifUri = body.next;
+        nextNotifUri = body.next;
       }
     } catch (err) {
       this.emit("error", Incident(err, "poll", "An error happened while processing the polled notifications"));

@@ -103,3 +103,9 @@ export interface MediaAudio extends MessageResource {
   clientmessageid: string;
   content: string;
 }
+
+export interface MemberConsumptionHorizonUpdate extends MessageResource {
+  messagetype: "ThreadActivity/MemberConsumptionHorizonUpdate";
+  clientmessageid: string; // A large integer (~20 digits)
+  content: string; // json
+}

@@ -1,11 +1,9 @@
 import { AnyType } from "kryo/types/any";
 import { ArrayType } from "kryo/types/array";
 import { DocumentType } from "kryo/types/document";
-import { NullType } from "kryo/types/null";
-import { TryUnionType } from "kryo/types/try-union";
 import { Ucs2StringType } from "kryo/types/ucs2-string";
-import { $Url, Url } from "./url";
-/*  Codln't figure out how to por this code, mainly how to make TryUnionType work with NullType
+
+/*  Couldn't figure out how to por this code, mainly how to make TryUnionType work with NullType
 
 import { VersionedType } from "kryo/core";
 function nullable(type: VersionedType<any, any, any, any>): VersionedType<any, any, any, any> {

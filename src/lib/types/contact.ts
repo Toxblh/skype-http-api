@@ -46,6 +46,7 @@ export interface Contact {
    */
   authCertificate?: string;
   blocked: boolean;
+  explicit: boolean;
   creationTime: Date;
   relationshipHistory?: RelationshipHistory;
   suggested?: boolean;

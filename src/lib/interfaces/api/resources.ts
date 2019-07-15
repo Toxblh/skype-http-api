@@ -8,7 +8,7 @@ export interface CallParticipant {
 
 export declare type ResourceType = "Text" | "RichText" | "Control/ClearTyping" | "Control/Typing" | "RichText/UriObject"
   | "RichText/Media_GenericFile" | "Signal/Flamingo" | "Event/Call" | "RichText/Location" | "ConversationUpdate"
-  | "RichText/Media_Video" | "RichText/Media_AudioMsg";
+  | "RichText/Media_Video" | "RichText/Media_AudioMsg" | "ThreadActivity/MemberConsumptionHorizonUpdate";
 
 export interface Resource {
   type: ResourceType;
@@ -25,6 +25,7 @@ export interface TextResource extends Resource {
   clientId: string; // An id set by the client
   content: string;
   properties: string;
+  callLog: any; // Used to identity a end call event when initiator is from mobile
 }
 
 export interface RichTextLocationResource extends Resource {
@@ -94,5 +95,10 @@ export interface ControlTypingResource extends Resource {
 export interface ConversationUpdateResource extends Resource {
   type: "ConversationUpdate";
   clientId: string; // An id set by the client
+  content: string;
+}
+
+export interface MemberConsumptionHorizonUpdateResource extends Resource {
+  type: "ThreadActivity/MemberConsumptionHorizonUpdate";
   content: string;
 }

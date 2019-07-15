@@ -1,7 +1,7 @@
 {
   "name": "skype-http",
   "description": "Unofficial Skype API for Node.js via HTTP",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "license": "MIT",
   "main": "dist/lib/index",
   "types": "dist/lib/index.d.ts",
@@ -30,8 +30,8 @@
     "Skype-HTTP"
   ],
   "dependencies": {
-    "@types/cheerio": "^0.22.7",
-    "@types/form-data": "^2.2.1",
+    "@types/cheerio": "^0.22.12",
+    "@types/form-data": "^2.5.0",
     "@types/gulp": "^4.0.6",
     "@types/lodash": "^4.14.102",
     "@types/request": "^2.47.0",
@@ -61,10 +61,10 @@
     "minimist": "^1.2.0",
     "mocha": "^5.2.0",
     "pre-commit": "^1.2.2",
-    "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
     "turbo-gulp": "^0.17.1",
-    "typescript": "^3.4.5"
+    "typescript": "^3.5.3"
   },
   "nyc": {
     "include": [

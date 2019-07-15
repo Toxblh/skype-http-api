@@ -90,11 +90,22 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
   };
 }
 
+// tslint:disable-next-line:max-line-length
 async function subscribeToResources(ioOptions: IoOptions, registrationToken: RegistrationToken, proxy?: string): Promise<void> {
   // TODO(demurgos): typedef
   // tslint:disable-next-line:typedef
   const requestDocument = {
     interestedResources: [
+      "/v1/threads/ALL",
+      "/v1/users/ME/conversations/ALL/properties",
+      "/v1/users/ME/conversations/ALL/messages",
+    ],
+    template: "raw",
+    conversationType: 2047,
+    channelType: "HttpLongPoll", // TODO: use websockets ?
+  };
+  /* all resources found in skype web code
+      interestedResources: [
       "/v1/threads/ALL",
       "/v1/users/ME/contacts/ALL",
       "/v1/users/ME/conversations/ALL/messages",
@@ -102,9 +113,7 @@ async function subscribeToResources(ioOptions: IoOptions, registrationToken: Reg
       "/v1/users/ME/endpoints/SELF/signals",
       "/v1/users/ME/conversations/ALL/properties?view=consumptionHorizon",
     ],
-    template: "raw",
-    channelType: "httpLongPoll", // TODO: use websockets ?
-  };
+   */
 
   const requestOptions: io.PostOptions = {
     uri: messagesUri.subscriptions(registrationToken.host),
@@ -140,25 +149,26 @@ async function subscribeToResources(ioOptions: IoOptions, registrationToken: Reg
   // }
 
 }
-
+// tslint:disable-next-line:max-line-length
 async function createPresenceDocs(ioOptions: IoOptions, registrationToken: RegistrationToken, proxy?: string): Promise<any> {
   // this is the exact json that is needed to register endpoint for setting of status.
   // demurgos: If I remember well enough, it's order dependant.
   // TODO: typedef
   // tslint:disable-next-line:typedef
   const requestBody = {
-    id: "endpointMessagingService",
-    type: "EndpointPresenceDoc",
-    selfLink: "uri",
+    id: "messagingService",
     privateInfo: {
-      epname: "skype", // Name of the endpoint (normally the name of the host)
+      epname: registrationToken.endpointId
+        .replace("{", "")
+        .replace("}", ""), // Name of the endpoint (normally the name of the host)
     },
     publicInfo: {
-      capabilities: "video|audio",
-      type: 1,
-      skypeNameVersion: Consts.SKYPEWEB_CLIENTINFO_NAME,
+      capabilities: "Audio|Video",
+      type: 2,
+      // tslint:disable-next-line:max-line-length
+      skypeNameVersion: `${Consts.SKYPEWEB_CLIENTINFO_VERSION}/${Consts.SKYPEWEB_CLIENTINFO_NAME}`,  // 1418/8.50.76.23/SkypeX
       nodeInfo: "xx",
-      version: `${Consts.SKYPEWEB_CLIENTINFO_VERSION}//${Consts.SKYPEWEB_CLIENTINFO_NAME}`,
+      version: "15",
     },
   };
 
