@@ -38,7 +38,8 @@ export interface Contact {
    * ```
    */
   phones?: Phone[];
-  profile: ContactProfile;
+  // may be missing if contact is from Skype for business ex: 2:corporate.id@corporation.com
+  profile?: ContactProfile;
   agent?: Agent;
   authorized: boolean;
   /**
@@ -46,7 +47,8 @@ export interface Contact {
    */
   authCertificate?: string;
   blocked: boolean;
-  explicit: boolean;
+  favorite?: boolean;
+  explicit?: boolean;
   creationTime: Date;
   relationshipHistory?: RelationshipHistory;
   suggested?: boolean;
@@ -60,11 +62,12 @@ export const $Contact: DocumentType<Contact> = new DocumentType<Contact>({
     displayName: {type: $DisplayName},
     displayNameSource: {type: $DisplayNameSource},
     phones: {type: new ArrayType({itemType: $Phone, maxLength: Infinity}), optional: true},
-    profile: {type: $ContactProfile},
+    profile: {type: $ContactProfile, optional: true},
     agent: {type: $Agent, optional: true},
     authorized: {type: new BooleanType()},
     authCertificate: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
     blocked: {type: new BooleanType()},
+    favorite: {type: new BooleanType(), optional: true},
     explicit: {type: new BooleanType(), optional: true},
     creationTime: {type: new DateType()},
     relationshipHistory: {type: $RelationshipHistory, optional: true},

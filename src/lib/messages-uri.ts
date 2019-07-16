@@ -199,6 +199,14 @@ export function poll(apiContext: any, userId: string = DEFAULT_USER,
 
 }
 
+/**
+ * Build the URI for polling notifications
+ * Uri example: https://eus.notifications.skype.com/users/8:{skypeId}
+ * /endpoints/{endpointId}/events/poll?cursor=1563307584&sca=2&pageSize=20
+ *
+ * @param apiContext
+ * @return Formated notifications URI
+ */
 export function notifications(apiContext: any): string {
   const NOTIFICATIONS_URL: string = "https://eus.notifications.skype.com";
   const ENDPOINT_ID: string = apiContext.registrationToken.endpointId
@@ -209,7 +217,9 @@ export function notifications(apiContext: any): string {
   const USER_NAME: string = apiContext.username.indexOf("8:") > -1 ?
     apiContext.username : `8:${apiContext.username}`;
   // tslint:disable-next-line:max-line-length
-  return `${NOTIFICATIONS_URL}/users/${USER_NAME}/endpoints/${ENDPOINT_ID}/events/poll?cursor=${CURRENT_TIME}&sca=1&pageSize=20`;
+  return `${NOTIFICATIONS_URL}/users/${
+    USER_NAME}/endpoints/${ENDPOINT_ID}/events/poll?cursor=${
+    CURRENT_TIME}&sca=0&pageSize=20`;
 }
 
 /**

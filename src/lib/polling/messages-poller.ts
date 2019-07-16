@@ -83,10 +83,12 @@ export function formatGenericMessageResource(
 }
 
 // tslint:disable-next-line:max-line-length
-export function formatConversationUpdateResource(nativeResource: nativeResources.ConversationUpdate): resources.ConversationUpdateResource {
+export function formatConversationUpdateResource(nativeResource: nativeResources.ConversationUpdate)
+  : resources.ConversationUpdateResource {
   const parsedConversationUri: messagesUri.ConversationUri = messagesUri
     .parseConversation(nativeResource.lastMessage.conversationLink);
-  const parsedContactUri: messagesUri.ContactUri = messagesUri.parseContact(nativeResource.lastMessage.from);
+  const parsedContactUri: messagesUri.ContactUri =
+    messagesUri.parseContact(nativeResource.lastMessage.from);
   const parsedContactId: ParsedConversationId = parseContactId(parsedContactUri.contact);
   return {
     type: "ConversationUpdate",
@@ -98,6 +100,21 @@ export function formatConversationUpdateResource(nativeResource: nativeResources
     conversation: parsedConversationUri.conversation,
     native: nativeResource,
     content: nativeResource.lastMessage.content,
+  };
+}
+export function formatCustomUserPropertiesResource(nativeResource: nativeResources.CustomUserPropertiesResource)
+  : resources.CustomUserPropertiesResource {
+  return {
+    type: "CustomUserProperties",
+    id: nativeResource.id,
+    composeTime: new Date(),
+    arrivalTime: new Date(),
+    conversation: "",
+    from: {raw: "", prefix: 0, username: ""},
+    native: nativeResource,
+    time: nativeResource.time,
+    resourceLink: nativeResource.resourceLink,
+    resource: nativeResource.resource,
   };
 }
 // tslint:disable-next-line:max-line-length
@@ -308,6 +325,9 @@ function formatEventMessage(native: nativeEvents.EventMessage): events.EventMess
     case "NewMessage":
       resource = formatMessageResource(<nativeResources.MessageResource> native.resource);
       break;
+    case "CustomUserProperties":
+      resource = formatCustomUserPropertiesResource(native.resource as nativeResources.CustomUserPropertiesResource);
+      break;
     default:
       // tslint:disable-next-line:max-line-length
       throw new Error(`Unknown EventMessage.resourceType (${JSON.stringify(native.resourceType)}) for Event:\n${JSON.stringify(native)}`);
@@ -348,7 +368,7 @@ export class MessagesPoller extends _events.EventEmitter {
     // moved from setInterval to setTimeout as the request
     // may resolve in ±1minute if no new messages / notifications are available
     this.getMessagesLoop();
-    this.getNotificationsLoop();
+    this.getNotificationsLoop(); // using this may result in double notifications
     return this;
   }
 
@@ -376,7 +396,7 @@ export class MessagesPoller extends _events.EventEmitter {
       setTimeout(async function () {
         await that.getNotifications();
         that.getNotificationsLoop();
-      }, 2000); //
+      }, 0); //
     }
     // tslint:enable
   }
@@ -388,8 +408,8 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
-      const uri: string = (messagesUri.poll(this.apiContext)
-        + (lastMsgId > 0 ? "?ackId=" + lastMsgId : ""));
+      const uri: string = (messagesUri.poll(this.apiContext));
+        // + (lastMsgId > 0 ? "?ackId=" + lastMsgId : "")); investigate this further
       // console.log(uri);
       const requestOptions: httpIo.PostOptions = {
         // TODO: explicitly define user, endpoint and subscription
@@ -415,7 +435,7 @@ export class MessagesPoller extends _events.EventEmitter {
           // tslint:disable-next-line:max-line-length
           // if (msg.resourceType != "UserPresence" && msg.resourceType != "EndpointPresence" && msg.resourceType != "ConversationUpdate")
           //  console.log("EVT: " + JSON.stringify(msg, null, "\t"));
-          lastMsgId = msg.id;
+          // lastMsgId = msg.id;
           const formatted: events.EventMessage = formatEventMessage(msg);
           if (formatted.resource !== null) {
             this.emit("event-message", formatted);
@@ -435,13 +455,6 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getNotifications(): Promise<void> {
     try {
-      let nextNotifUri: string = "";
-      if (notifUri && notifUri === nextNotifUri) {
-        notifUri = messagesUri.notifications(this.apiContext);
-      } else {
-        notifUri = nextNotifUri;
-      }
-
       notifUri = notifUri ? notifUri : messagesUri.notifications(this.apiContext);
 
       const requestOptions: httpIo.GetOptions = {
@@ -461,6 +474,10 @@ export class MessagesPoller extends _events.EventEmitter {
       }
 
       const body: { eventMessages?: nativeEvents.EventMessage[]; next?: string } = JSON.parse(res.body);
+      if (body.next) {
+        // added before parsing messages in case parsing messages fails
+        notifUri = body.next + "&pageSize=20"; // need to append page size as the new uri doesn't have it
+      }
       if (body.eventMessages !== undefined) {
         for (const msg of body.eventMessages) {
           lastMsgId = msg.id;
@@ -470,9 +487,7 @@ export class MessagesPoller extends _events.EventEmitter {
           }
         }
       }
-      if (body.next) {
-        nextNotifUri = body.next;
-      }
+
     } catch (err) {
       this.emit("error", Incident(err, "poll", "An error happened while processing the polled notifications"));
     }

@@ -8,7 +8,8 @@ export interface CallParticipant {
 
 export declare type ResourceType = "Text" | "RichText" | "Control/ClearTyping" | "Control/Typing" | "RichText/UriObject"
   | "RichText/Media_GenericFile" | "Signal/Flamingo" | "Event/Call" | "RichText/Location" | "ConversationUpdate"
-  | "RichText/Media_Video" | "RichText/Media_AudioMsg" | "ThreadActivity/MemberConsumptionHorizonUpdate";
+  | "RichText/Media_Video" | "RichText/Media_AudioMsg" | "ThreadActivity/MemberConsumptionHorizonUpdate"
+  | "CustomUserProperties";
 
 export interface Resource {
   type: ResourceType;
@@ -96,6 +97,14 @@ export interface ConversationUpdateResource extends Resource {
   type: "ConversationUpdate";
   clientId: string; // An id set by the client
   content: string;
+}
+
+export interface CustomUserPropertiesResource extends Resource {
+  type: "CustomUserProperties";
+  id: string;
+  time: string;
+  resourceLink: string;
+  resource: any;
 }
 
 export interface MemberConsumptionHorizonUpdateResource extends Resource {

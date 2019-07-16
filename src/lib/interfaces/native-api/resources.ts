@@ -1,3 +1,4 @@
+import { ParsedConversationId } from "../api/api";
 import { RichText, Text } from "./message-resources";
 
 export interface Resource {
@@ -11,11 +12,24 @@ export interface ConversationUpdate extends Resource {
   lastMessage: Text;
 }
 
+export interface CustomUserPropertiesResource extends Resource {
+  id: string;
+  type: string;
+  time: string;
+  resourceLink: string;
+  resource: any;
+  composeTime?: Date;
+  arrivalTime?: Date;
+  from?: string; // username
+  conversation?: string; // conversationId
+  native?: any;
+}
+
 export interface MessageResource extends Resource {
   type: "Message";
   messagetype: "Control/LiveState" | "Control/ClearTyping" | "Control/Typing" | "Event/Call"
   | "RichText" | "RichText/UriObject" | "RichText/Location" | "RichText/Media_GenericFile"
-  | "RichText/Media_Video" | "Signal/Flamingo" | "Text"
+  | "RichText/Media_Video" | "Signal/Flamingo" | "Text" | "RichText/Media_AudioMsg"
   | "ThreadActivity/MemberConsumptionHorizonUpdate" | string; // TODO
   ackrequired: string;
   // JSON date
