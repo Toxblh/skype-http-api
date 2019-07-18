@@ -380,26 +380,25 @@ export class MessagesPoller extends _events.EventEmitter {
     // 1 more response will still be returned after stopping the listener
     return this;
   }
-  protected getMessagesLoop() {
-    // tslint:disable
-    const that: any = this;
+
+  protected async getMessagesLoop() {
     if (this.isActive()) {
-      setTimeout(async function () {
-          await that.getMessages();
-        that.getMessagesLoop();
-      }, 0);
+      // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getMessagesLoop  START ~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      await this.getMessages();
+      // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getMessagesLoop  END   ~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      this.getMessagesLoop();
     }
   }
-  protected getNotificationsLoop() {
-    const that: any = this;
+
+  protected async getNotificationsLoop() {
     if (this.isActive()) {
-      setTimeout(async function () {
-        await that.getNotifications();
-        that.getNotificationsLoop();
-      }, 0); //
+      // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getNotificationsRecursive  START ~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      await this.getNotifications();
+      // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getNotificationsRecursive  END   ~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      this.getNotificationsLoop();
     }
-    // tslint:enable
   }
+
   /**
    * Get the new messages / events from the server.
    * This function always returns a successful promise once the messages are retrieved or an error happens.
@@ -408,8 +407,9 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
-      const uri: string = (messagesUri.poll(this.apiContext));
-        // + (lastMsgId > 0 ? "?ackId=" + lastMsgId : "")); investigate this further
+      // const uri: string = (messagesUri.poll(this.apiContext)); // reevaluate this
+      const uri: string = messagesUri.poll(this.apiContext.registrationToken.host);
+      // + (lastMsgId > 0 ? "?ackId=" + lastMsgId : "")); investigate this further
       // console.log(uri);
       const requestOptions: httpIo.PostOptions = {
         // TODO: explicitly define user, endpoint and subscription

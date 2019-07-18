@@ -25,7 +25,7 @@ export async function searchSkypeDirectory(io: io.HttpIo,
         "User-Agent": Consts.SKYPEWEB_USER_AGENT,
         "X-Skypetoken": apiContext.skypeToken.value,
         "Accept": "application/json",
-        "X-ECS-ETag": "\"icN4uWD0m7ErUq8mnwfXY+MK1NUHSTRsNn8xplOxPvw=\"",
+        "X-ECS-ETag": "",
         "Referer": Consts.SKYPEWEB_API_REFERRAL,
         "X-SkypeGraphServiceSettings": {
           experiment: "Default",

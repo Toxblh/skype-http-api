@@ -190,13 +190,19 @@ export function endpoint(host: string, userId: string = DEFAULT_USER,
   return get(host, joinPath(buildEndpoint(userId, endpointId)));
 }
 
-export function poll(apiContext: any, userId: string = DEFAULT_USER,
-                     subscriptionId: number = 0): string {
-  return get(apiContext.registrationToken.host,
-    joinPath(buildPoll(userId,
-      encodeURIComponent(apiContext.registrationToken.endpointId),
-      subscriptionId)));
+// Reevaluate this
+// export function poll(apiContext: any, userId: string = DEFAULT_USER,
+//                      subscriptionId: number = 0): string {
+//   return get(apiContext.registrationToken.host,
+//     joinPath(buildPoll(userId,
+//       encodeURIComponent(apiContext.registrationToken.endpointId),
+//       subscriptionId)));
+//
+// }
 
+export function poll(host: string, userId: string = DEFAULT_USER,
+                     endpointId: string = DEFAULT_ENDPOINT, subscriptionId: number = 0): string {
+  return get(host, joinPath(buildPoll(userId, endpointId, subscriptionId)));
 }
 
 /**
