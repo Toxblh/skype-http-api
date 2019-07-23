@@ -4,6 +4,7 @@ import url from "url";
 
 export const DEFAULT_USER: string = "ME";
 export const DEFAULT_ENDPOINT: string = "SELF";
+import { getNotificationUri } from "./login";
 
 const CONVERSATION_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/conversations\/([^/]+)$/;
 const CONTACT_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/contacts\/([^/]+)$/;
@@ -214,7 +215,7 @@ export function poll(host: string, userId: string = DEFAULT_USER,
  * @return Formated notifications URI
  */
 export function notifications(apiContext: any): string {
-  const NOTIFICATIONS_URL: string = "https://eus.notifications.skype.com";
+  const NOTIFICATIONS_ENDPOINT: any = getNotificationUri() || "https://eus.notifications.skype.com/";
   const ENDPOINT_ID: string = apiContext.registrationToken.endpointId
     .replace("{", "")
     .replace("}", "");
@@ -223,7 +224,7 @@ export function notifications(apiContext: any): string {
   const USER_NAME: string = apiContext.username.indexOf("8:") > -1 ?
     apiContext.username : `8:${apiContext.username}`;
   // tslint:disable-next-line:max-line-length
-  return `${NOTIFICATIONS_URL}/users/${
+  return `${NOTIFICATIONS_ENDPOINT}users/${
     USER_NAME}/endpoints/${ENDPOINT_ID}/events/poll?cursor=${
     CURRENT_TIME}&sca=0&pageSize=20`;
 }

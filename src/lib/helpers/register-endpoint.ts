@@ -85,7 +85,11 @@ export async function registerEndpoint(
       },
       cookies,
       // See: https://github.com/OllieTerrance/SkPy/blob/7b6be6e41238058b9ab644d908621456764fb6d6/skpy/conn.py#L717
-      body: JSON.stringify({endpointFeatures: "Agent"}),
+      body: JSON.stringify({
+        endpointFeatures: "Agent,Presence2015,MessageProperties," +
+          "CustomUserProperties,Highlights,Casts,CortanaBot,ModernBots,AutoIdleForWebApi," +
+          "secureThreads,InviteFree,SupportsReadReceipts,notificationStream",
+      }),
     };
 
     const res: io.Response = await io.post(req);
@@ -133,6 +137,44 @@ export async function registerEndpoint(
   }
 
   throw new EndpointRegistrationError(RedirectionLimit.create(retries), tries);
+}
+
+export async function updateRegistrationInfo(
+  io: io.HttpIo,
+  cookies: toughCookie.Store,
+  skypeToken: SkypeToken,
+  registrationToken: RegistrationToken,
+  proxy?: string,
+): Promise<any> {
+  const req: io.PutOptions = {
+    uri: "https://client-s.gateway.messenger.live.com/v2/users/ME/endpoints/"
+      + encodeURIComponent(registrationToken.endpointId),
+    proxy,
+    headers: {
+      "Authentication": utils.stringifyHeaderParams({skypetoken: skypeToken.value}),
+      "Content-Type": "application/json",
+    },
+    cookies,
+    body: JSON.stringify({
+      endpointFeatures: "Agent,Presence2015,MessageProperties,CustomUserProperties,Highlights,Casts," +
+        "CortanaBot,ModernBots,AutoIdleForWebApi,secureThreads,InviteFree,SupportsReadReceipts," +
+        "notificationStream",
+      subscriptions: [{
+        channelType: "httpLongPoll",
+        interestedResources: ["/v1/users/ME/conversations/ALL/properties",
+          "/v1/users/ME/conversations/ALL/messages",
+          "/v1/threads/ALL"],
+      }],
+    }),
+  };
+
+  const res: io.Response = await io.put(req);
+
+  if (res.statusCode !== 200) {
+    console.log("ERROR" + res);
+  }
+  const body: any = JSON.parse(res.body);
+  return body;
 }
 
 /**

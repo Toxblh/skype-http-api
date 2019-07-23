@@ -2,14 +2,18 @@ import { Incident } from "incident";
 import toughCookie from "tough-cookie";
 import { getSelfProfile } from "./api/get-self-profile";
 import * as Consts from "./consts";
-import { registerEndpoint } from "./helpers/register-endpoint";
+import { registerEndpoint, updateRegistrationInfo } from "./helpers/register-endpoint";
 import { Credentials } from "./interfaces/api/api";
 import { Context as ApiContext, RegistrationToken, SkypeToken } from "./interfaces/api/context";
 import * as io from "./interfaces/http-io";
 import * as messagesUri from "./messages-uri";
 import * as microsoftAccount from "./providers/microsoft-account";
 import { ApiProfile } from "./types/api-profile";
+let NOTIFICATIONS_ENDPOINT_URI: any;
 
+export function getNotificationUri() {
+  return NOTIFICATIONS_ENDPOINT_URI;
+}
 interface IoOptions {
   io: io.HttpIo;
   cookies: toughCookie.Store;
@@ -75,6 +79,16 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
   if (options.verbose) {
     console.log("Subscribed to resources");
   }
+
+  const updatedRegistrationInfo: any = await updateRegistrationInfo(
+    ioOptions.io,
+    ioOptions.cookies,
+    skypeToken,
+    registrationToken,
+    options.proxy,
+  );
+  NOTIFICATIONS_ENDPOINT_URI = updatedRegistrationInfo.isActiveUrl.substring(
+    0, updatedRegistrationInfo.isActiveUrl.indexOf("users"));
 
   await createPresenceDocs(ioOptions, registrationToken, options.proxy);
   if (options.verbose) {
