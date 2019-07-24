@@ -187,7 +187,7 @@ export function endpoints(host: string, userId: string = DEFAULT_USER): string {
 }
 
 export function endpoint(host: string, userId: string = DEFAULT_USER,
-  endpointId: string = DEFAULT_ENDPOINT): string {
+                         endpointId: string = DEFAULT_ENDPOINT): string {
   return get(host, joinPath(buildEndpoint(userId, endpointId)));
 }
 
@@ -215,7 +215,7 @@ export function poll(host: string, userId: string = DEFAULT_USER,
  * @return Formated notifications URI
  */
 export function notifications(apiContext: any): string {
-  const NOTIFICATIONS_ENDPOINT: any = getNotificationUri() || "https://eus.notifications.skype.com/";
+  const NOTIFICATIONS_ENDPOINT: any = "https://eus.notifications.skype.com/";
   const ENDPOINT_ID: string = apiContext.registrationToken.endpointId
     .replace("{", "")
     .replace("}", "");
@@ -224,7 +224,7 @@ export function notifications(apiContext: any): string {
   const USER_NAME: string = apiContext.username.indexOf("8:") > -1 ?
     apiContext.username : `8:${apiContext.username}`;
   // tslint:disable-next-line:max-line-length
-  return `${NOTIFICATIONS_ENDPOINT}users/${
+  return getNotificationUri() || `${NOTIFICATIONS_ENDPOINT}users/${
     USER_NAME}/endpoints/${ENDPOINT_ID}/events/poll?cursor=${
     CURRENT_TIME}&sca=0&pageSize=20`;
 }
@@ -236,7 +236,7 @@ export function notifications(apiContext: any): string {
  * @param endpointId
  */
 export function subscriptions(host: string, userId: string = DEFAULT_USER,
-  endpointId: string = DEFAULT_ENDPOINT): string {
+                              endpointId: string = DEFAULT_ENDPOINT): string {
   return get(host, joinPath(buildSubscriptions(userId, endpointId)));
 }
 
@@ -279,7 +279,7 @@ export function userMessagingService(host: string, user: string = DEFAULT_USER):
 }
 
 export function endpointMessagingService(host: string, user: string = DEFAULT_USER,
-  endpoint: string = DEFAULT_ENDPOINT): string {
+                                         endpoint: string = DEFAULT_ENDPOINT): string {
   return get(host, joinPath(buildEndpointMessagingService(user, endpoint)));
 }
 

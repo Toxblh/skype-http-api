@@ -5,7 +5,7 @@ import * as Consts from "../consts";
 import { EndpointRegistrationError } from "../errors/endpoint-registration";
 import { MissingHeaderError, UnexpectedHttpStatusError } from "../errors/http";
 import { LoginRateLimitExceeded, RedirectionLimit } from "../errors/index";
-import { RegistrationToken, SkypeToken } from "../interfaces/api/context";
+import { RegistrationInfo, RegistrationToken, SkypeToken } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
 import * as messagesUri from "../messages-uri";
 import * as utils from "../utils";
@@ -68,7 +68,7 @@ export async function registerEndpoint(
   proxy?: string,
 ): Promise<RegistrationToken> {
   // TODO: Use this array to report all the requests and responses in case of failure
-  const tries: {req: io.PostOptions; res: io.Response}[] = [];
+  const tries: { req: io.PostOptions; res: io.Response }[] = [];
 
   // Use non-strict equality to try at least once. `tryCount` counts the number of failures.
   for (let tryCount: number = 0; tryCount <= retries; tryCount++) {
@@ -145,7 +145,7 @@ export async function updateRegistrationInfo(
   skypeToken: SkypeToken,
   registrationToken: RegistrationToken,
   proxy?: string,
-): Promise<any> {
+): Promise<RegistrationInfo> {
   const req: io.PutOptions = {
     uri: "https://client-s.gateway.messenger.live.com/v2/users/ME/endpoints/"
       + encodeURIComponent(registrationToken.endpointId),
@@ -171,10 +171,10 @@ export async function updateRegistrationInfo(
   const res: io.Response = await io.put(req);
 
   if (res.statusCode !== 200) {
-    console.log("ERROR" + res);
+    console.log("ERROR updateRegistrationInfo", res);
   }
-  const body: any = JSON.parse(res.body);
-  return body;
+
+  return JSON.parse(res.body);
 }
 
 /**

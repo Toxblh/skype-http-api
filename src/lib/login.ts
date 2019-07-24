@@ -4,7 +4,7 @@ import { getSelfProfile } from "./api/get-self-profile";
 import * as Consts from "./consts";
 import { registerEndpoint, updateRegistrationInfo } from "./helpers/register-endpoint";
 import { Credentials } from "./interfaces/api/api";
-import { Context as ApiContext, RegistrationToken, SkypeToken } from "./interfaces/api/context";
+import { Context as ApiContext, RegistrationInfo, RegistrationToken, SkypeToken } from "./interfaces/api/context";
 import * as io from "./interfaces/http-io";
 import * as messagesUri from "./messages-uri";
 import * as microsoftAccount from "./providers/microsoft-account";
@@ -80,15 +80,14 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
     console.log("Subscribed to resources");
   }
 
-  const updatedRegistrationInfo: any = await updateRegistrationInfo(
+  const updatedRegistrationInfo: RegistrationInfo = await updateRegistrationInfo(
     ioOptions.io,
     ioOptions.cookies,
     skypeToken,
     registrationToken,
     options.proxy,
   );
-  NOTIFICATIONS_ENDPOINT_URI = updatedRegistrationInfo.isActiveUrl.substring(
-    0, updatedRegistrationInfo.isActiveUrl.indexOf("users"));
+  NOTIFICATIONS_ENDPOINT_URI = updatedRegistrationInfo.subscriptions[0].longPollUrl;
 
   await createPresenceDocs(ioOptions, registrationToken, options.proxy);
   if (options.verbose) {

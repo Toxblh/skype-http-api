@@ -53,6 +53,43 @@ export interface RegistrationToken {
   raw: string;
 }
 
+/**
+ * Contains information that can be used to poll notifications and
+ * maintain the session active longPollUrl & isActiveUrl
+ */
+/*
+{
+  "id": "endpoint id, same as RegistrationToken.endpointId, but without the curly braces",
+  "endpointFeatures": "the registered feature, from registerEndpoint()",
+  "subscriptions": [
+    {
+      "channelType": "HttpLongPoll",
+      "interestedResources": [
+        "/v1/users/ME/conversations/ALL/properties",
+        "/v1/users/ME/conversations/ALL/messages",
+        "/v1/threads/ALL"
+      ],
+      "longPollUrl": "poll notifications endpoint"
+    }
+  ],
+  "isActiveUrl": "active session endpoint",
+  "longPollActiveTimeoutSupport": false
+}
+ */
+export interface RegistrationInfo {
+  id: string;
+  endpointFeatures: string;
+  subscriptions: Subscriptions[];
+  isActiveUrl: string;
+  longPollActiveTimeoutSupport: string;
+}
+
+export interface Subscriptions {
+  channelType: string;
+  interestedResources: any;
+  longPollUrl: string;
+}
+
 export namespace RegistrationToken {
   /**
    * JSON-safe representation of `RegistrationToken`, used for serialization.
