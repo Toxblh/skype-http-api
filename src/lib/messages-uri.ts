@@ -4,7 +4,8 @@ import url from "url";
 
 export const DEFAULT_USER: string = "ME";
 export const DEFAULT_ENDPOINT: string = "SELF";
-import { getNotificationUri } from "./login";
+
+import { getNotificationUri, resetNotificationUri } from "./login";
 
 const CONVERSATION_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/conversations\/([^/]+)$/;
 const CONTACT_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/contacts\/([^/]+)$/;
@@ -215,18 +216,11 @@ export function poll(host: string, userId: string = DEFAULT_USER,
  * @return Formated notifications URI
  */
 export function notifications(apiContext: any): string {
-  const NOTIFICATIONS_ENDPOINT: any = "https://eus.notifications.skype.com/";
-  const ENDPOINT_ID: string = apiContext.registrationToken.endpointId
-    .replace("{", "")
-    .replace("}", "");
-  // @ts-ignore
-  const CURRENT_TIME: number = Math.floor(new Date() / 1000);
-  const USER_NAME: string = apiContext.username.indexOf("8:") > -1 ?
-    apiContext.username : `8:${apiContext.username}`;
-  // tslint:disable-next-line:max-line-length
-  return getNotificationUri() || `${NOTIFICATIONS_ENDPOINT}users/${
-    USER_NAME}/endpoints/${ENDPOINT_ID}/events/poll?cursor=${
-    CURRENT_TIME}&sca=0&pageSize=20`;
+  const notificationEndpoint: string =
+    getNotificationUri().uri;
+
+  // removeNotificationEndpoint(apiContext.registrationToken.endpointId);
+  return notificationEndpoint;
 }
 
 /**
@@ -312,6 +306,7 @@ export interface ContactUri {
   user: string;
   contact: string;
 }
+
 export function parseContact(uri: string): ContactUri {
   const parsed: url.Url = url.parse(uri);
   if (parsed.host === undefined || parsed.pathname === undefined) {

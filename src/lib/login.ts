@@ -1,4 +1,5 @@
 import { Incident } from "incident";
+import _ from "lodash";
 import toughCookie from "tough-cookie";
 import { getSelfProfile } from "./api/get-self-profile";
 import * as Consts from "./consts";
@@ -9,11 +10,36 @@ import * as io from "./interfaces/http-io";
 import * as messagesUri from "./messages-uri";
 import * as microsoftAccount from "./providers/microsoft-account";
 import { ApiProfile } from "./types/api-profile";
-let NOTIFICATIONS_ENDPOINT_URI: any;
+
+const notificationEndpoint: any = [];
+
+// let NOTIFICATIONS_ENDPOINT_URI: any;
+
+const notificationEnd: any = {
+  uri: undefined,
+};
 
 export function getNotificationUri() {
-  return NOTIFICATIONS_ENDPOINT_URI;
+  return notificationEnd;
 }
+export function setNotificationUri(uri: string) {
+  notificationEnd.uri = uri;
+  return notificationEnd.uri;
+}
+export function resetNotificationUri() {
+  notificationEnd.uri = undefined;
+}
+
+// export function getNotificationEndpoint(endpointId: string) {
+//   return notificationEndpoint.find((o: any) => {
+//     return o.endpointId === endpointId;
+//   });
+// }
+//
+// export function removeNotificationEndpoint(endpointId: string) {
+//   _.remove(notificationEndpoint, { endpointId });
+// }
+
 interface IoOptions {
   io: io.HttpIo;
   cookies: toughCookie.Store;
@@ -87,7 +113,9 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
     registrationToken,
     options.proxy,
   );
-  NOTIFICATIONS_ENDPOINT_URI = updatedRegistrationInfo.subscriptions[0].longPollUrl;
+  // notificationEndpoint.add({endpointId: (registrationToken.endpointId),
+  //   updatedRegistrationInfo: (updatedRegistrationInfo.subscriptions[0].longPollUrl)});
+  notificationEnd.uri = updatedRegistrationInfo.subscriptions[0].longPollUrl;
 
   await createPresenceDocs(ioOptions, registrationToken, options.proxy);
   if (options.verbose) {
@@ -162,6 +190,7 @@ async function subscribeToResources(ioOptions: IoOptions, registrationToken: Reg
   // }
 
 }
+
 // tslint:disable-next-line:max-line-length
 async function createPresenceDocs(ioOptions: IoOptions, registrationToken: RegistrationToken, proxy?: string): Promise<any> {
   // this is the exact json that is needed to register endpoint for setting of status.

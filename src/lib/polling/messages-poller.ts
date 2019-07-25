@@ -10,10 +10,11 @@ import * as httpIo from "../interfaces/http-io";
 import * as nativeEvents from "../interfaces/native-api/events";
 import * as nativeMessageResources from "../interfaces/native-api/message-resources";
 import * as nativeResources from "../interfaces/native-api/resources";
+import { getNotificationUri, setNotificationUri } from "../login";
 import * as messagesUri from "../messages-uri";
 
 let lastMsgId: number = 0; // this is used to make the next poll request
-let notifUri: string;
+// let notifUri: string;
 
 // Match a contact id:
 // TODO: handle the "guest" prefix
@@ -455,10 +456,10 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getNotifications(): Promise<void> {
     try {
-      notifUri = notifUri ? notifUri : messagesUri.notifications(this.apiContext);
+      // notifUri = notifUri ? notifUri : messagesUri.notifications(this.apiContext);
 
       const requestOptions: httpIo.GetOptions = {
-        uri: notifUri,
+        uri: getNotificationUri().uri,
         cookies: this.apiContext.cookies,
         headers: {
           Authentication: "skypetoken=" + this.apiContext.skypeToken.value,
@@ -476,7 +477,8 @@ export class MessagesPoller extends _events.EventEmitter {
       const body: { eventMessages?: nativeEvents.EventMessage[]; next?: string } = JSON.parse(res.body);
       if (body.next) {
         // added before parsing messages in case parsing messages fails
-        notifUri = body.next + "&pageSize=20"; // need to append page size as the new uri doesn't have it
+        // notifUri = body.next + "&pageSize=20"; // need to append page size as the new uri doesn't have it
+        setNotificationUri(body.next + "&pageSize=20");
       }
       if (body.eventMessages !== undefined) {
         for (const msg of body.eventMessages) {
