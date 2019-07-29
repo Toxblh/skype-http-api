@@ -2,16 +2,16 @@ import cheerio from "cheerio";
 import path from "path";
 import toughCookie from "tough-cookie";
 import url from "url";
+import { WrongCredentialsError } from "../errors";
+import { WrongCredentialsLimitError } from "../errors";
 import { AccountRecoverRestriction } from "../errors/account-recover-restriction";
 import * as httpErrors from "../errors/http";
 import { IdentityCheckRequired } from "../errors/identity-check-required";
+import { MicrosoftAccountLoginError } from "../errors/microsoft-account";
 import * as getLiveKeysErrors from "../errors/microsoft-account/get-live-keys";
 import * as getLiveTokenErrors from "../errors/microsoft-account/get-live-token";
 import * as getSkypeTokenErrors from "../errors/microsoft-account/get-skype-token";
-import { MicrosoftAccountLoginError } from "../errors/microsoft-account/login";
-import { WrongCredentialsError } from "../errors/wrong-credentials";
-import { WrongCredentialsLimitError } from "../errors/wrong-credentials-limit";
-
+import { UpsellOfferError } from "../errors/upsell-offer";
 import { SkypeToken } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
 
@@ -210,7 +210,8 @@ export interface GetLiveTokenOptions {
 export async function getLiveToken(options: GetLiveTokenOptions): Promise<string> {
   try {
     const response: io.Response = await requestLiveToken(options);
-    return await scrapLiveToken(response.body, options);
+    const htmlResponse: any = await checkIfUpsellIsPresentAndDismiss(response.body, options);
+    return scrapLiveToken(htmlResponse);
   } catch (_err) {
     const err: getLiveTokenErrors.GetLiveTokenError.Cause | WrongCredentialsError | WrongCredentialsLimitError = _err;
     switch (err.name) {
@@ -271,17 +272,22 @@ export async function requestLiveToken(options: GetLiveTokenOptions): Promise<io
 }
 
 /**
- * Scrap the result of a sendCredentials requests to retrieve the value of the `t` parameter
+ * Does the necessary steps to avoid the Authenticator Upsell offer in order to be able to complete
+ * the login process
+ * This step is required in order to get the html containing the `t` parameter necessary for scrapLiveToken
+ *
  * @param html
- * @returns The token provided by Live for Skype
+ * @param options GetLiveTokenOptions
+ *
+ * @return html to be used by scrapLiveToken
  */
-export async function scrapLiveToken(html: string, options: GetLiveTokenOptions): Promise<string> {
-  // TODO(demurgos): Handle the possible failure of .load (invalid HTML)
-  const $: CheerioStatic = cheerio.load(html);
-
+export async function checkIfUpsellIsPresentAndDismiss(html: string, options: GetLiveTokenOptions)
+  : Promise<string> {
+  let $: CheerioStatic = cheerio.load(html);
   if (html.indexOf("app=Authenticator") > -1) {
-    console.log("<<<<<<  upsell detected  >>>>>");
-    const url: string = $("form").attr("action").replace('\\"', "").replace('\\"', "");
+    console.log("<<<<<<  Upsell Detected  >>>>>");
+    const url: string = $("form").attr("action")
+      .replace('\\"', "").replace('\\"', "");
     const inputValues: any = $("input");
 
     // noinspection TsLint
@@ -294,9 +300,11 @@ export async function scrapLiveToken(html: string, options: GetLiveTokenOptions)
       // @ts-ignore
       if (element.attribs) {
         // @ts-ignore
-        const paramName: string = element.attribs.name.replace('\\"', "").replace('\\"', "");
+        const paramName: string = element.attribs.name
+          .replace('\\"', "").replace('\\"', "");
         // @ts-ignore
-        const paramValue: string = element.attribs.value.replace('\\"', "").replace('\\"', "");
+        const paramValue: string = element.attribs.value
+          .replace('\\"', "").replace('\\"', "");
 
         switch (paramName) {
           case "client_flight":
@@ -331,14 +339,36 @@ export async function scrapLiveToken(html: string, options: GetLiveTokenOptions)
       proxy: options.proxy,
     };
 
-    const authenticatorResponse: io.Response = await options.httpIo.post(postOptions);
+    const getUpsellInfoResponse: io.Response = await options.httpIo.post(postOptions);
 
-    console.log("<<<<<<  upsell request response  >>>>>   ");
-    console.log(">>> Body >>> " + authenticatorResponse.body);
-    console.log(">>> Body >>> " + authenticatorResponse.statusCode);
+    $ = cheerio.load(getUpsellInfoResponse.body);
+    const scriptData: any = $("script").get()[6].children[0].data;
+    const parse: any = JSON.parse(scriptData.replace("//<![CDATA[\n$Config=", "")
+      .replace(';window.$Do && window.$Do.register(\"$Config\", 0, true);\n//]]>', ""));
 
+    const cancelUpselPostOptions: io.PostOptions = {
+      uri: parse.WLXAccount.upsellAuthenticator.options.viewDefs.cancel.url,
+      cookies: options.cookies,
+      proxy: options.proxy,
+    };
+
+    const cancelUpsellResponse: io.Response = await options.httpIo.post(cancelUpselPostOptions);
+
+    console.log("<<<<<<  Upsell Avoided  >>>>>");
+    return cancelUpsellResponse.body;
+  } else {
+    return html;
   }
+}
 
+/**
+ * Scrap the result of a sendCredentials requests to retrieve the value of the `t` parameter
+ * @param html
+ * @returns The token provided by Live for Skype
+ */
+export function scrapLiveToken(html: string): string {
+  // TODO(demurgos): Handle the possible failure of .load (invalid HTML)
+  const $: CheerioStatic = cheerio.load(html);
   const tokenNode: Cheerio = $("#t");
   const tokenValue: string | undefined = tokenNode.val();
   if (tokenValue === undefined || tokenValue === "") {
@@ -351,6 +381,8 @@ export async function scrapLiveToken(html: string, options: GetLiveTokenOptions)
       throw IdentityCheckRequired.create();
     } else if (html.indexOf("account.live.com/recover?") >= 0) {
       throw AccountRecoverRestriction.create();
+    } else if (html.indexOf("upsell") >= 0) {
+      throw UpsellOfferError.create(html);
     } else {
       // TODO(demurgos): Check if there is a PPFT token (redirected to the getLiveKeys response)
       throw getLiveTokenErrors.LiveTokenNotFoundError.create(html);
