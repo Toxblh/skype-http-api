@@ -49,6 +49,7 @@ export interface Contact {
   blocked: boolean;
   favorite?: boolean;
   explicit?: boolean;
+  email_hashes?: any[];
   creationTime: Date;
   relationshipHistory?: RelationshipHistory;
   suggested?: boolean;
@@ -69,6 +70,7 @@ export const $Contact: DocumentType<Contact> = new DocumentType<Contact>({
     blocked: {type: new BooleanType()},
     favorite: {type: new BooleanType(), optional: true},
     explicit: {type: new BooleanType(), optional: true},
+    email_hashes: {type: new ArrayType({itemType: new AnyType(), maxLength: Infinity}), optional: true},
     creationTime: {type: new DateType()},
     relationshipHistory: {type: $RelationshipHistory, optional: true},
     suggested: {type: new BooleanType(), optional: true},

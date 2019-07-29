@@ -73,7 +73,7 @@ function nullable(type: VersionedType<any, any, any, any>): VersionedType<any, a
  *
  */
 export interface ApiProfile {
-  firstname: string;
+  firstname: any | null;
   lastname: any | null;
   birthday: any | null;
   gender: any | null;
@@ -96,7 +96,7 @@ export interface ApiProfile {
 
 export const $ApiProfile: DocumentType<ApiProfile> = new DocumentType<ApiProfile>({
   properties: {
-    firstname: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
+    firstname: { type: new AnyType(), optional: true },
     lastname: { type: new AnyType(), optional: true },
     birthday: {type: new AnyType()},
     gender: {type: new AnyType()},

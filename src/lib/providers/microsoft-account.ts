@@ -210,7 +210,7 @@ export interface GetLiveTokenOptions {
 export async function getLiveToken(options: GetLiveTokenOptions): Promise<string> {
   try {
     const response: io.Response = await requestLiveToken(options);
-    return scrapLiveToken(response.body);
+    return await scrapLiveToken(response.body, options);
   } catch (_err) {
     const err: getLiveTokenErrors.GetLiveTokenError.Cause | WrongCredentialsError | WrongCredentialsLimitError = _err;
     switch (err.name) {
@@ -275,9 +275,70 @@ export async function requestLiveToken(options: GetLiveTokenOptions): Promise<io
  * @param html
  * @returns The token provided by Live for Skype
  */
-export function scrapLiveToken(html: string): string {
+export async function scrapLiveToken(html: string, options: GetLiveTokenOptions): Promise<string> {
   // TODO(demurgos): Handle the possible failure of .load (invalid HTML)
   const $: CheerioStatic = cheerio.load(html);
+
+  if (html.indexOf("app=Authenticator") > -1) {
+    console.log("<<<<<<  upsell detected  >>>>>");
+    const url: string = $("form").attr("action").replace('\\"', "").replace('\\"', "");
+    const inputValues: any = $("input");
+
+    // noinspection TsLint
+    let client_flight: any = "";
+    let ipt: any = "";
+    let pprid: any = "";
+    let uaid: any = "";
+
+    Object.values(inputValues).forEach(element => {
+      // @ts-ignore
+      if (element.attribs) {
+        // @ts-ignore
+        const paramName: string = element.attribs.name.replace('\\"', "").replace('\\"', "");
+        // @ts-ignore
+        const paramValue: string = element.attribs.value.replace('\\"', "").replace('\\"', "");
+
+        switch (paramName) {
+          case "client_flight":
+            client_flight = paramValue;
+            break;
+          case "ipt":
+            ipt = paramValue;
+            break;
+          case "pprid":
+            pprid = paramValue;
+            break;
+          case "uaid":
+            uaid = paramValue;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+
+    const formData: any = {
+      client_flight,
+      ipt,
+      pprid,
+      uaid,
+    };
+
+    const postOptions: io.PostOptions = {
+      uri: url,
+      cookies: options.cookies,
+      form: formData,
+      proxy: options.proxy,
+    };
+
+    const authenticatorResponse: io.Response = await options.httpIo.post(postOptions);
+
+    console.log("<<<<<<  upsell request response  >>>>>   ");
+    console.log(">>> Body >>> " + authenticatorResponse.body);
+    console.log(">>> Body >>> " + authenticatorResponse.statusCode);
+
+  }
+
   const tokenNode: Cheerio = $("#t");
   const tokenValue: string | undefined = tokenNode.val();
   if (tokenValue === undefined || tokenValue === "") {
