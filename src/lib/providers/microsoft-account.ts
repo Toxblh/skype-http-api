@@ -384,6 +384,7 @@ export function scrapLiveToken(html: string): string {
     } else if (html.indexOf("upsell") >= 0) {
       throw UpsellOfferError.create(html);
     } else {
+      // TODO: add authenticator case
       // TODO(demurgos): Check if there is a PPFT token (redirected to the getLiveKeys response)
       throw getLiveTokenErrors.LiveTokenNotFoundError.create(html);
     }

@@ -323,6 +323,9 @@ function formatEventMessage(native: nativeEvents.EventMessage): events.EventMess
     case "ConversationUpdate":
       resource = formatConversationUpdateResource(native.resource as nativeResources.ConversationUpdate);
       break;
+    case "MessageUpdate":
+      resource = null;
+      break;
     case "NewMessage":
       resource = formatMessageResource(<nativeResources.MessageResource> native.resource);
       break;

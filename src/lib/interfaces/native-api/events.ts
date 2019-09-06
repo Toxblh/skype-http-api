@@ -11,7 +11,7 @@ export interface EventMessage {
   type: "EventMessage";
   // TODO: check the available types
   resourceType: "NewMessage" | "UserPresence" | "EndpointPresence" | "ConversationUpdate"
-    | "CustomUserProperties" | string;
+    | "CustomUserProperties" | "MessageUpdate" | string;
   time: string;
   // https://{host}/v1/users/ME/conversations/{conversation}/messages/{id}
   resourceLink: string;
