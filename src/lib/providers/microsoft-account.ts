@@ -4,13 +4,18 @@ import toughCookie from "tough-cookie";
 import url from "url";
 import { WrongCredentialsError } from "../errors";
 import { WrongCredentialsLimitError } from "../errors";
+import { AbuseBehavior } from "../errors/abuse-behaviour";
+import { AccountNotFound } from "../errors/account-not-found";
 import { AccountRecoverRestriction } from "../errors/account-recover-restriction";
+import { AccountUpdate } from "../errors/account-update";
+import { GoogleAuthRequired } from "../errors/google-auth";
 import * as httpErrors from "../errors/http";
 import { IdentityCheckRequired } from "../errors/identity-check-required";
 import { MicrosoftAccountLoginError } from "../errors/microsoft-account";
 import * as getLiveKeysErrors from "../errors/microsoft-account/get-live-keys";
 import * as getLiveTokenErrors from "../errors/microsoft-account/get-live-token";
 import * as getSkypeTokenErrors from "../errors/microsoft-account/get-skype-token";
+import { MicrosoftAuthenticator } from "../errors/microsoft-authenticator";
 import { UpsellOfferError } from "../errors/upsell-offer";
 import { SkypeToken } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
@@ -369,7 +374,10 @@ export async function checkIfUpsellIsPresentAndDismiss(html: string, options: Ge
 export function scrapLiveToken(html: string): string {
   // TODO(demurgos): Handle the possible failure of .load (invalid HTML)
   const $: CheerioStatic = cheerio.load(html);
+
   const tokenNode: Cheerio = $("#t");
+  const formSubmitUrl: string | undefined = $("form").attr("action");
+
   const tokenValue: string | undefined = tokenNode.val();
   if (tokenValue === undefined || tokenValue === "") {
     if (html.indexOf("sErrTxt:'Your account or password is incorrect.") >= 0) {
@@ -382,7 +390,20 @@ export function scrapLiveToken(html: string): string {
     } else if (html.indexOf("account.live.com/recover?") >= 0) {
       throw AccountRecoverRestriction.create();
     } else if (html.indexOf("upsell") >= 0) {
-      throw UpsellOfferError.create(html);
+      throw UpsellOfferError.create();
+    } else if (html.indexOf("GoogleRedirectUrl") >= 0) {
+      throw GoogleAuthRequired.create();
+    } else if (html.indexOf("Help us protect your account")  >= 0) {
+      throw MicrosoftAuthenticator.create();
+    } else if (html.indexOf("That Microsoft account doesn\\'t exist") >= 0) {
+      throw AccountNotFound.create();
+    } else if (formSubmitUrl !== undefined || formSubmitUrl !== "") {
+      if (formSubmitUrl.indexOf("Abuse") >= 0) {
+        throw AbuseBehavior.create();
+      } else if (formSubmitUrl.indexOf("/login") >= 0) {
+      } else if (formSubmitUrl.indexOf("/remind") >= 0) {
+        throw AccountUpdate.create();
+      }
     } else {
       // TODO: add authenticator case
       // TODO(demurgos): Check if there is a PPFT token (redirected to the getLiveKeys response)

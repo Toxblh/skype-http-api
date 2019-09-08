@@ -1,5 +1,4 @@
 import { Incident } from "incident";
-import _ from "lodash";
 import toughCookie from "tough-cookie";
 import { getSelfProfile } from "./api/get-self-profile";
 import * as Consts from "./consts";
@@ -10,10 +9,6 @@ import * as io from "./interfaces/http-io";
 import * as messagesUri from "./messages-uri";
 import * as microsoftAccount from "./providers/microsoft-account";
 import { ApiProfile } from "./types/api-profile";
-
-const notificationEndpoint: any = [];
-
-// let NOTIFICATIONS_ENDPOINT_URI: any;
 
 const notificationEnd: any = {
   uri: undefined,
@@ -29,16 +24,6 @@ export function setNotificationUri(uri: string) {
 export function resetNotificationUri() {
   notificationEnd.uri = undefined;
 }
-
-// export function getNotificationEndpoint(endpointId: string) {
-//   return notificationEndpoint.find((o: any) => {
-//     return o.endpointId === endpointId;
-//   });
-// }
-//
-// export function removeNotificationEndpoint(endpointId: string) {
-//   _.remove(notificationEndpoint, { endpointId });
-// }
 
 interface IoOptions {
   io: io.HttpIo;
@@ -113,8 +98,6 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
     registrationToken,
     options.proxy,
   );
-  // notificationEndpoint.add({endpointId: (registrationToken.endpointId),
-  //   updatedRegistrationInfo: (updatedRegistrationInfo.subscriptions[0].longPollUrl)});
   notificationEnd.uri = updatedRegistrationInfo.subscriptions[0].longPollUrl;
 
   await createPresenceDocs(ioOptions, registrationToken, options.proxy);

@@ -8,7 +8,7 @@ export interface CallParticipant {
 
 export declare type ResourceType = "Text" | "RichText" | "Control/ClearTyping" | "Control/Typing" | "RichText/UriObject"
   | "RichText/Media_GenericFile" | "Signal/Flamingo" | "Event/Call" | "RichText/Location" | "ConversationUpdate"
-  | "RichText/Media_Video" | "RichText/Media_AudioMsg" | "ThreadActivity/MemberConsumptionHorizonUpdate"
+  | "RichText/Media_Video" | "RichText/Media_AudioMsg" | "ThreadActivity/MemberConsumptionHorizonUpdate" | "Ignored"
   | "CustomUserProperties";
 
 export interface Resource {
