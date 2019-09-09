@@ -103,6 +103,7 @@ export function formatConversationUpdateResource(nativeResource: nativeResources
     content: nativeResource.lastMessage.content,
   };
 }
+
 export function formatCustomUserPropertiesResource(nativeResource: nativeResources.CustomUserPropertiesResource)
   : resources.CustomUserPropertiesResource {
   return {
@@ -118,6 +119,7 @@ export function formatCustomUserPropertiesResource(nativeResource: nativeResourc
     resource: nativeResource.resource,
   };
 }
+
 // tslint:disable-next-line:max-line-length
 export function formatControlTypingResource(
   retObj: resources.Resource,
@@ -187,7 +189,20 @@ function formatMessageResource(nativeResource: nativeResources.MessageResource):
       return formatMemberConsumptionHorizonUpdateResource(formatGenericMessageResource(nativeResource, nativeResource.messagetype), <nativeMessageResources.MemberConsumptionHorizonUpdate> nativeResource);
     default:
       // tslint:disable-next-line:max-line-length
-      throw new Error(`Unknown ressource.messageType (${JSON.stringify(nativeResource.messagetype)}) for resource:\n${JSON.stringify(nativeResource, null, "\t")}`);
+      // throw new Error(`Unknown ressource.messageType (${JSON.stringify(nativeResource.messagetype)}) for resource:\n${JSON.stringify(nativeResource, null, "\t")}`);
+      // log disabled due to flood
+      return {
+        type: "Ignored",
+        id: "Ignored",
+        composeTime: new Date(),
+        arrivalTime: new Date(),
+        from: {
+          raw: "Ignored",
+          prefix: 1,
+          username: "Ignored",
+        },
+        conversation: "Ignored",
+      };
   }
 }
 
@@ -334,7 +349,10 @@ function formatEventMessage(native: nativeEvents.EventMessage): events.EventMess
       break;
     default:
       // tslint:disable-next-line:max-line-length
-      throw new Error(`Unknown EventMessage.resourceType (${JSON.stringify(native.resourceType)}) for Event:\n${JSON.stringify(native)}`);
+      // throw new Error(`Unknown EventMessage.resourceType (${JSON.stringify(native.resourceType)}) for Event:\n${JSON.stringify(native)}`);
+      resource = null;
+      // log disabled due to flood
+      break;
   }
 
   return {
@@ -450,6 +468,7 @@ export class MessagesPoller extends _events.EventEmitter {
       this.emit("error", Incident(err, "poll", "An error happened while processing the polled messages"));
     }
   }
+
   /**
    * Get the new messages / notifications from the server, this is used to get messages that are not
    * returned by the old poll endpoint (ex. end call when initiator is on mobile).
