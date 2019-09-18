@@ -2,6 +2,7 @@ import cheerio from "cheerio";
 import _events from "events";
 import { Incident } from "incident";
 import { UnexpectedHttpStatusError } from "../errors";
+import { readSetRegistrationTokenHeader } from "../helpers/register-endpoint";
 import { ParsedConversationId } from "../interfaces/api/api";
 import { Context as ApiContext } from "../interfaces/api/context";
 import * as events from "../interfaces/api/events";
@@ -430,10 +431,7 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
-      // const uri: string = (messagesUri.poll(this.apiContext)); // reevaluate this
       const uri: string = messagesUri.poll(this.apiContext.registrationToken.host);
-      // + (lastMsgId > 0 ? "?ackId=" + lastMsgId : "")); investigate this further
-      // console.log(uri);
       const requestOptions: httpIo.PostOptions = {
         // TODO: explicitly define user, endpoint and subscription
         uri,
@@ -445,6 +443,16 @@ export class MessagesPoller extends _events.EventEmitter {
       };
       const res: httpIo.Response = await this.io.post(requestOptions);
 
+      if (res.headers["set-registrationtoken"]) {
+        const registrationTokenHeader: string = res.headers["set-registrationtoken"];
+
+        console.log("Updating registrationtoken -> getMessages() -> "
+          + res.headers["set-registrationtoken"]); // for debug, will remove
+
+        this.apiContext.registrationToken =  readSetRegistrationTokenHeader(
+          this.apiContext.registrationToken.host, registrationTokenHeader);
+      }
+
       if (res.statusCode !== 200) {
         const cause: UnexpectedHttpStatusError = UnexpectedHttpStatusError.create(res, new Set([200]), requestOptions);
         this.emit("error", Incident(cause, "poll", "Unable to poll the messages"));
@@ -455,10 +463,6 @@ export class MessagesPoller extends _events.EventEmitter {
 
       if (body.eventMessages !== undefined) {
         for (const msg of body.eventMessages) {
-          // tslint:disable-next-line:max-line-length
-          // if (msg.resourceType != "UserPresence" && msg.resourceType != "EndpointPresence" && msg.resourceType != "ConversationUpdate")
-          //  console.log("EVT: " + JSON.stringify(msg, null, "\t"));
-          // lastMsgId = msg.id;
           const formatted: events.EventMessage = formatEventMessage(msg);
           if (formatted.resource !== null) {
             this.emit("event-message", formatted);
@@ -479,8 +483,6 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getNotifications(): Promise<void> {
     try {
-      // notifUri = notifUri ? notifUri : messagesUri.notifications(this.apiContext);
-
       const requestOptions: httpIo.GetOptions = {
         uri: this.notificationUri ? this.notificationUri : await messagesUri.notifications(this.io, this.apiContext),
         cookies: this.apiContext.cookies,
@@ -490,6 +492,16 @@ export class MessagesPoller extends _events.EventEmitter {
         proxy: this.apiContext.proxy,
       };
       const res: httpIo.Response = await this.io.get(requestOptions);
+
+      if (res.headers["set-registrationtoken"]) {
+        const registrationTokenHeader: string = res.headers["set-registrationtoken"];
+
+        console.log("Updating registrationtoken -> getNotifications() -> "
+          + res.headers["set-registrationtoken"]); // for debug, will remove
+
+        this.apiContext.registrationToken =  readSetRegistrationTokenHeader(
+          this.apiContext.registrationToken.host, registrationTokenHeader);
+      }
 
       if (res.statusCode !== 200) {
         const cause: UnexpectedHttpStatusError = UnexpectedHttpStatusError.create(res, new Set([200]), requestOptions);
