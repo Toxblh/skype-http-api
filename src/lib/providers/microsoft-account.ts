@@ -380,7 +380,8 @@ export function scrapLiveToken(html: string): string {
 
   const tokenValue: string | undefined = tokenNode.val();
   if (tokenValue === undefined || tokenValue === "") {
-    if (html.indexOf("sErrTxt:'Your account or password is incorrect.") >= 0) {
+    if (html.indexOf("sErrTxt:'Your account or password is incorrect.") >= 0
+      && html.indexOf("GoogleRedirectUrl") < 0) {
       throw WrongCredentialsError.create();
       /* tslint:disable-next-line:max-line-length */
     } else if (html.indexOf("sErrTxt:\"You\\'ve tried to sign in too many times with an incorrect account or password.\"") >= 0) {

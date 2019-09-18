@@ -186,7 +186,7 @@ export async function updateRegistrationInfo(
  * @param header String value of the `Set-Registration` header.
  * @return Parsed registration token
  */
-function readSetRegistrationTokenHeader(hostname: string, header: string): RegistrationToken {
+export function readSetRegistrationTokenHeader(hostname: string, header: string): RegistrationToken {
   const parsedHeader: Map<string, string> = utils.parseHeaderParams(header);
   const expiresString: string | undefined = parsedHeader.get("expires");
   const registrationTokenValue: string | undefined = parsedHeader.get("registrationToken");
