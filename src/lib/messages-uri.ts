@@ -5,7 +5,9 @@ import url from "url";
 export const DEFAULT_USER: string = "ME";
 export const DEFAULT_ENDPOINT: string = "SELF";
 
-import { getNotificationUri, resetNotificationUri } from "./login";
+import { updateRegistrationInfo } from "./helpers/register-endpoint";
+import { RegistrationInfo } from "./interfaces/api/context";
+import * as httpIo from "./interfaces/http-io";
 
 const CONVERSATION_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/conversations\/([^/]+)$/;
 const CONTACT_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/contacts\/([^/]+)$/;
@@ -212,15 +214,19 @@ export function poll(host: string, userId: string = DEFAULT_USER,
  * Uri example: https://eus.notifications.skype.com/users/8:{skypeId}
  * /endpoints/{endpointId}/events/poll?cursor=1563307584&sca=2&pageSize=20
  *
+ * @param io
  * @param apiContext
- * @return Formated notifications URI
+ * @return  notifications URI
  */
-export function notifications(apiContext: any): string {
-  const notificationEndpoint: string =
-    getNotificationUri().uri;
-
-  // removeNotificationEndpoint(apiContext.registrationToken.endpointId);
-  return notificationEndpoint;
+export async function notifications(io: httpIo.HttpIo, apiContext: any): Promise<string> {
+  const updatedRegistrationInfo: RegistrationInfo =  await updateRegistrationInfo(
+    io,
+    apiContext.cookies,
+    apiContext.skypeToken,
+    apiContext.registrationToken,
+    apiContext.proxy,
+  );
+  return updatedRegistrationInfo.subscriptions[0].longPollUrl;
 }
 
 /**

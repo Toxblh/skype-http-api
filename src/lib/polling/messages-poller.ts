@@ -10,7 +10,6 @@ import * as httpIo from "../interfaces/http-io";
 import * as nativeEvents from "../interfaces/native-api/events";
 import * as nativeMessageResources from "../interfaces/native-api/message-resources";
 import * as nativeResources from "../interfaces/native-api/resources";
-import { getNotificationUri, setNotificationUri } from "../login";
 import * as messagesUri from "../messages-uri";
 
 let lastMsgId: number = 0; // this is used to make the next poll request
@@ -369,6 +368,7 @@ export class MessagesPoller extends _events.EventEmitter {
   io: httpIo.HttpIo;
   apiContext: ApiContext;
   activeState: boolean | false;
+  notificationUri: string | undefined;
 
   constructor(io: httpIo.HttpIo, apiContext: ApiContext) {
     super();
@@ -376,6 +376,7 @@ export class MessagesPoller extends _events.EventEmitter {
     this.io = io;
     this.apiContext = apiContext;
     this.activeState = false;
+    this.notificationUri = undefined;
   }
 
   isActive(): boolean {
@@ -481,7 +482,7 @@ export class MessagesPoller extends _events.EventEmitter {
       // notifUri = notifUri ? notifUri : messagesUri.notifications(this.apiContext);
 
       const requestOptions: httpIo.GetOptions = {
-        uri: getNotificationUri().uri,
+        uri: this.notificationUri ? this.notificationUri : await messagesUri.notifications(this.io, this.apiContext),
         cookies: this.apiContext.cookies,
         headers: {
           Authentication: "skypetoken=" + this.apiContext.skypeToken.value,
@@ -499,8 +500,7 @@ export class MessagesPoller extends _events.EventEmitter {
       const body: { eventMessages?: nativeEvents.EventMessage[]; next?: string } = JSON.parse(res.body);
       if (body.next) {
         // added before parsing messages in case parsing messages fails
-        // notifUri = body.next + "&pageSize=20"; // need to append page size as the new uri doesn't have it
-        setNotificationUri(body.next + "&pageSize=20");
+        this.notificationUri = body.next + "&pageSize=20";
       }
       if (body.eventMessages !== undefined) {
         for (const msg of body.eventMessages) {

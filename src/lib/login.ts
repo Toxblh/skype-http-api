@@ -10,21 +10,6 @@ import * as messagesUri from "./messages-uri";
 import * as microsoftAccount from "./providers/microsoft-account";
 import { ApiProfile } from "./types/api-profile";
 
-const notificationEnd: any = {
-  uri: undefined,
-};
-
-export function getNotificationUri() {
-  return notificationEnd;
-}
-export function setNotificationUri(uri: string) {
-  notificationEnd.uri = uri;
-  return notificationEnd.uri;
-}
-export function resetNotificationUri() {
-  notificationEnd.uri = undefined;
-}
-
 interface IoOptions {
   io: io.HttpIo;
   cookies: toughCookie.Store;
@@ -90,15 +75,6 @@ export async function login(options: LoginOptions): Promise<ApiContext> {
   if (options.verbose) {
     console.log("Subscribed to resources");
   }
-
-  const updatedRegistrationInfo: RegistrationInfo = await updateRegistrationInfo(
-    ioOptions.io,
-    ioOptions.cookies,
-    skypeToken,
-    registrationToken,
-    options.proxy,
-  );
-  notificationEnd.uri = updatedRegistrationInfo.subscriptions[0].longPollUrl;
 
   await createPresenceDocs(ioOptions, registrationToken, options.proxy);
   if (options.verbose) {
