@@ -19,6 +19,7 @@ export interface Contact {
    * the user.
    */
   personId: MriKey;
+  workloads: "skype" | string | null; // probably enum
   /**
    * MRI key of this contact, this serves as the unique id for this contact.
    */
@@ -59,6 +60,7 @@ export interface Contact {
 export const $Contact: DocumentType<Contact> = new DocumentType<Contact>({
   properties: {
     personId: {type: $MriKey},
+    workloads: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
     mri: {type: $MriKey},
     displayName: {type: $DisplayName},
     displayNameSource: {type: $DisplayNameSource},
