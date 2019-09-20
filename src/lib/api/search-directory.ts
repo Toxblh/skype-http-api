@@ -14,10 +14,20 @@ export async function searchSkypeDirectory(io: io.HttpIo,
     you cannot get data for ${JSON.stringify(userId)}`);
   }
   try {
+    const uriBase: string = "https://skypegraph.skype.com/v2.0/search?";
+
+    const sessionId: string  =  apiContext.registrationToken.endpointId
+                                      .replace("{", "").replace("}", "");
+
+    const uri: string  = `${uriBase}searchString=${encodeURIComponent(userId)
+                          }&requestId=${Math.round((new Date()).getTime())
+                          }0&sessionId=${sessionId}`;
+
+    console.log(uri);
     // get X-ECS-ETag from response headers and use it
     const requestOptions: io.GetOptions = {
-      uri: `https://skypegraph.skype.com/v2.0/search?searchString=${userId}
-    &requestId=${Math.round((new Date()).getTime())}`,
+      // tslint:disable-next-line:prefer-template
+      uri,
       cookies: apiContext.cookies,
       proxy: apiContext.proxy,
       headers: {
@@ -42,6 +52,7 @@ export async function searchSkypeDirectory(io: io.HttpIo,
     }
 
     const body: any = JSON.parse(res.body);
+    console.log(body);
     const results: any = body.results;
     const searchResults: any[] = [];
 

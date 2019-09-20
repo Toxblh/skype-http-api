@@ -9,6 +9,7 @@ export interface Phone {
 export interface Contact {
   // TODO: Use MriKey
   id: FullId;
+  workloads: "skype" | string | null; // probably enum
   avatarUrl: string | null;
   phones: Phone[];
   emails?: String[];

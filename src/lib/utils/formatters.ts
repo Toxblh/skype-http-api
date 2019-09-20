@@ -71,13 +71,13 @@ function define(...args: any[]) {
 
 function searchContactToPerson(native: NativeSearchContact): Contact {
   let avatarUrl: string | null;
-
   if (typeof native.avatarUrl === "string") {
     avatarUrl = ensureHttps(native.avatarUrl);
     // TODO: ensure that the "cacheHeaders=1" queryString is there
   } else {
     avatarUrl = null;
   }
+  const workloads: string | null  = native.workloads;
   const displayName: string = sanitizeXml(native.displayname);
   const firstName: string | null = (native.firstname !== undefined) ? sanitizeXml(native.firstname) : null;
   const lastName: string | null = (native.lastname !== undefined) ? sanitizeXml(native.lastname) : null;
@@ -94,6 +94,7 @@ function searchContactToPerson(native: NativeSearchContact): Contact {
       typeName: mriTypeToTypeName(type),
       raw: `${typeKey}:${native.username}`,
     },
+    workloads,
     emails: native.emails,
     avatarUrl,
     phones: phoneNumbers,
@@ -170,6 +171,7 @@ function contactToPerson(native: NativeContact): Contact {
   } else {
     avatarUrl = null;
   }
+  const workloads: string | null  = native.workloads;
 
   const displayName: string = sanitizeXml(native.display_name);
   let firstName: string | null = null;
@@ -192,6 +194,7 @@ function contactToPerson(native: NativeContact): Contact {
       typeName: native.type,
       raw: `${typeKey}:${native.id}`,
     },
+    workloads,
     avatarUrl,
     phones: phoneNumbers,
     name: {
