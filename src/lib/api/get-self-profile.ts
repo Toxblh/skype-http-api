@@ -2,7 +2,8 @@ import { Incident } from "incident";
 import { JsonReader } from "kryo/readers/json";
 import toughCookie from "tough-cookie";
 import * as apiUri from "../api-uri";
-import { UnexpectedHttpStatusError } from "../errors/http";
+import { UnexpectedHttpStatusError } from "../errors";
+import { ProxyError } from "../errors/proxy-error";
 import { SkypeToken } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
 import { $ApiProfile, ApiProfile } from "../types/api-profile";
@@ -31,7 +32,14 @@ export async function getSelfProfile(
   try {
     parsed = JSON.parse(response.body);
   } catch (err) {
-    throw new Incident(err, "UnexpectedResponseBody", {body: response.body});
+    // Added for debug
+    console.log(JSON.stringify(skypeToken));
+    console.log(JSON.stringify(response.headers));
+    if (response.body.indexOf("Proxy Error") > -1) {
+      throw ProxyError.create(response.body);
+    }
+    throw new Incident(err, "UnexpectedResponseBody", {body: response.body, response});
+
   }
   const reader: JsonReader = new JsonReader();
   let result: ApiProfile;
@@ -42,7 +50,10 @@ export async function getSelfProfile(
       throw Error("read should always be defined");
     }
   } catch (err) {
-    throw new Incident(err, "UnexpectedResult", {body: parsed});
+    // Added for debug
+    console.log(JSON.stringify(skypeToken));
+    console.log(JSON.stringify(response.headers));
+    throw new Incident(err, "UnexpectedResult", {body: parsed, response});
   }
   return result;
 }

@@ -23,7 +23,6 @@ export async function searchSkypeDirectory(io: io.HttpIo,
                           }&requestId=${Math.round((new Date()).getTime())
                           }0&sessionId=${sessionId}`;
 
-    console.log(uri);
     // get X-ECS-ETag from response headers and use it
     const requestOptions: io.GetOptions = {
       // tslint:disable-next-line:prefer-template
@@ -52,7 +51,6 @@ export async function searchSkypeDirectory(io: io.HttpIo,
     }
 
     const body: any = JSON.parse(res.body);
-    console.log(body);
     const results: any = body.results;
     const searchResults: any[] = [];
 
