@@ -86,10 +86,21 @@ export function formatGenericMessageResource(
 // tslint:disable-next-line:max-line-length
 export function formatConversationUpdateResource(nativeResource: nativeResources.ConversationUpdate)
   : resources.ConversationUpdateResource {
-  const parsedConversationUri: messagesUri.ConversationUri = messagesUri
-    .parseConversation(nativeResource.lastMessage.conversationLink);
-  const parsedContactUri: messagesUri.ContactUri =
-    messagesUri.parseContact(nativeResource.lastMessage.from);
+
+  // dummy links needed in order to avoid errors caused when users aren't yet connected
+  const parsedConversationUri: messagesUri.ConversationUri = messagesUri.parseConversation(
+    (
+      nativeResource.lastMessage.conversationLink !== undefined ?
+        nativeResource.lastMessage.conversationLink :
+        "https://client-s.gateway.messenger.live.com/v1/users/ME/conversations/8:dummy_user"),
+  );
+
+  const parsedContactUri: messagesUri.ContactUri = messagesUri.parseContact((
+    nativeResource.lastMessage.from !== undefined ?
+      nativeResource.lastMessage.from :
+      "https://client-s.gateway.messenger.live.com/v1/users/ME/contacts/8:dummy_user"),
+    );
+
   const parsedContactId: ParsedConversationId = parseContactId(parsedContactUri.contact);
   return {
     type: "ConversationUpdate",
@@ -153,7 +164,7 @@ function formatMessageResource(nativeResource: nativeResources.MessageResource):
   switch (nativeResource.messagetype) {
     case "RichText/UriObject":
       // tslint:disable-next-line:max-line-length
-      return formatUriObjectResource(formatFileResource(formatGenericMessageResource(nativeResource, nativeResource.messagetype), <nativeMessageResources.UriObject> nativeResource), <nativeMessageResources.UriObject> nativeResource);
+      // return formatUriObjectResource(formatFileResource(formatGenericMessageResource(nativeResource, nativeResource.messagetype), <nativeMessageResources.UriObject> nativeResource), <nativeMessageResources.UriObject> nativeResource);
     case "RichText/Media_Video":
       // tslint:disable-next-line:max-line-length
       return formatMediaVideoResource(formatFileResource(formatGenericMessageResource(nativeResource, nativeResource.messagetype), <nativeMessageResources.MediaVideo> nativeResource), <nativeMessageResources.MediaVideo> nativeResource);
@@ -449,7 +460,7 @@ export class MessagesPoller extends _events.EventEmitter {
         console.log("Updating registrationtoken -> getMessages() -> "
           + res.headers["set-registrationtoken"]); // for debug, will remove
 
-        this.apiContext.registrationToken =  readSetRegistrationTokenHeader(
+        this.apiContext.registrationToken = readSetRegistrationTokenHeader(
           this.apiContext.registrationToken.host, registrationTokenHeader);
       }
 
@@ -499,7 +510,7 @@ export class MessagesPoller extends _events.EventEmitter {
         console.log("Updating registrationtoken -> getNotifications() -> "
           + res.headers["set-registrationtoken"]); // for debug, will remove
 
-        this.apiContext.registrationToken =  readSetRegistrationTokenHeader(
+        this.apiContext.registrationToken = readSetRegistrationTokenHeader(
           this.apiContext.registrationToken.host, registrationTokenHeader);
       }
 

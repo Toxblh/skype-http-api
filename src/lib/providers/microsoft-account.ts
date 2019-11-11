@@ -398,7 +398,7 @@ export function scrapLiveToken(html: string): string {
       throw MicrosoftAuthenticator.create();
     } else if (html.indexOf("That Microsoft account doesn\\'t exist") >= 0) {
       throw AccountNotFound.create();
-    } else if (formSubmitUrl !== undefined || formSubmitUrl !== "") {
+    } else if (formSubmitUrl !== undefined && formSubmitUrl !== "") {
       if (formSubmitUrl.indexOf("Abuse") >= 0) {
         throw AbuseBehavior.create();
       } else if (formSubmitUrl.indexOf("/login") >= 0) {
@@ -408,6 +408,7 @@ export function scrapLiveToken(html: string): string {
     } else {
       // TODO: add authenticator case
       // TODO(demurgos): Check if there is a PPFT token (redirected to the getLiveKeys response)
+      console.log(html);
       throw getLiveTokenErrors.LiveTokenNotFoundError.create(html);
     }
   }
