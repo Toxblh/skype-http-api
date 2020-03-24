@@ -50,7 +50,12 @@ export async function sendDocument(
     return Promise.reject(new Incident("send-document", "Received wrong return code"));
   }
   const objectId: string = JSON.parse(resNewObject.body).id;
-  const file: Buffer = await fs.readFile(document.file);
+  let file: Buffer;
+  if (typeof document.file === "string") {
+    file = await fs.readFile(document.file);
+  } else {
+    file = document.file;
+  }
   const requestOptionsPutObject: io.PutOptions = {
     uri: messagesUri.objectContent("api.asm.skype.com", objectId, "original"),
     cookies: apiContext.cookies,

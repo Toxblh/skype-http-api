@@ -5,6 +5,7 @@ import { Context } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
 import * as messagesUri from "../messages-uri";
 import { getCurrentTime } from "../utils";
+import escapeHtml from "escape-html";
 
 interface SendMessageResponse {
   OriginalArrivalTime: number;
@@ -46,7 +47,12 @@ export async function sendImage(
   }
   const objectId: string = JSON.parse(resNewObject.body).id;
 
-  const file: Buffer = await fs.readFile(img.file);
+  let file: Buffer;
+  if (typeof img.file === "string") {
+    file = await fs.readFile(img.file);
+  } else {
+    file = img.file;
+  }
   const requestOptionsPutObject: io.PutOptions = {
     uri: messagesUri.objectContent("api.asm.skype.com", objectId, "imgpsh"),
     cookies: apiContext.cookies,
@@ -66,14 +72,23 @@ export async function sendImage(
 
   const pictureUri: string = messagesUri.object("api.asm.skype.com", objectId);
   const pictureThumbnailUri: string = messagesUri.objectView("api.asm.skype.com", objectId, "imgt1");
+  const shareUri = `https://login.skype.com/login/soo?go=xmmfallback?pic=${objectId}`;
 
+  let extraURIObject = "";
+  if (img.width) {
+    extraURIObject += ` width="${img.width}"`;
+  }
+  if (img.height) {
+    extraURIObject += ` width="${img.height}"`;
+  }
   const query: SendMessageQuery = {
     clientmessageid: String(getCurrentTime() + Math.floor(10000 * Math.random())),
     content: `
-      <URIObject type="Picture.1" uri="${pictureUri}" url_thumbnail="${pictureThumbnailUri}">
-        loading...
-        <OriginalName v="${img.name}"/>
-        <meta type="photo" originalName="${img.name}"/>
+      <URIObject type="Picture.1" uri="${escapeHtml(pictureUri)}" url_thumbnail="${escapeHtml(pictureThumbnailUri)}"${extraURIObject}>
+        To view this shared photo, go to: <a href="${escapeHtml(shareUri)}">${escapeHtml(shareUri)}</a>
+        <OriginalName v="${img.name}"></OriginalName>
+        <FileSize v="${file.length}"></FileSize>
+        <meta type="photo" originalName="${img.name}"></meta>
       </URIObject>
     `,
     messagetype: "RichText/UriObject",

@@ -27,11 +27,13 @@ export interface NewMessage {
 }
 
 export interface NewMediaMessage {
-  file: string;
+  file: string | Buffer;
   name: string;
+  width?: number;
+  height?: number;
 }
 export interface NewDocument {
-  file: string;
+  file: string | Buffer;
   name: string;
 }
 
