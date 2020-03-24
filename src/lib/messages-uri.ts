@@ -15,7 +15,7 @@ const MESSAGES_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/conversations\/([^/]+)\
 const MESSAGE_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/conversations\/([^/]+)\/messages\/([^/]+)$/;
 
 function joinPath(parts: string[]): string {
-  return path.posix.join.apply(null, parts);
+  return path.posix.join.apply(null, parts.map((part) => encodeURIComponent(part)));
 }
 
 // The following functions build an array of parts to build the path
@@ -256,6 +256,10 @@ export function conversation(host: string, user: string, conversationId: string)
  */
 export function messages(host: string, user: string, conversationId: string): string {
   return get(host, joinPath(buildMessages(user, conversationId)));
+}
+
+export function message(host: string, user: string, conversationId: string, messageId: string): string {
+  return get(host, joinPath(buildMessages(user, conversationId).concat(messageId)));
 }
 
 export function objects(host: string): string {

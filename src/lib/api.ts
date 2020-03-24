@@ -14,6 +14,8 @@ import { sendAudio } from "./api/send-audio";
 import { sendDocument } from "./api/send-document";
 import { sendImage } from "./api/send-image";
 import { sendMessage } from "./api/send-message";
+import { sendEdit } from "./api/send-edit";
+import { sendDelete } from "./api/send-delete";
 import { setConversationTopic } from "./api/set-conversation-topic";
 import { setStatus } from "./api/set-status";
 import { ContactsInterface, ContactsService } from "./contacts/contacts";
@@ -102,6 +104,14 @@ export class Api extends events.EventEmitter implements ApiEvents {
 
   async sendMessage(message: api.NewMessage, conversationId: string): Promise<api.SendMessageResult> {
     return sendMessage(this.io, this.context, message, conversationId);
+  }
+
+  async sendEdit(message: api.NewMessage, conversationId: string, messageId: string): Promise<void> {
+    return sendEdit(this.io, this.context, message, conversationId, messageId);
+  }
+
+  async sendDelete(conversationId: string, messageId: string): Promise<void> {
+    return sendDelete(this.io, this.context, conversationId, messageId);
   }
 
   async sendDocument(message: api.NewDocument, conversationId: string): Promise<api.SendMessageResult> {
