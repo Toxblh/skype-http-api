@@ -225,7 +225,7 @@ type NativeFileResouce =
 
 function formatFileResource(retObj: resources.Resource, native: NativeFileResouce): resources.FileResource {
   const ret: resources.FileResource = retObj as resources.FileResource;
-  const $: CheerioStatic = cheerio.load(native.content);
+  const $: CheerioStatic = cheerio.load(native.content || "");
   const obj: Cheerio = $("URIObject");
   ret.uri_type = obj.attr("type");
   ret.uri = obj.attr("uri");
