@@ -1,5 +1,6 @@
 export interface ThreadProperties {
   topic?: string;
+  picture?: string;
   lastjoinat?: string; // a timestamp ? example: "1421342788493"
   version?: string; // a timestamp ? example: "1464029299838"
 }

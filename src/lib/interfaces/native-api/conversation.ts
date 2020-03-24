@@ -2,6 +2,7 @@ import { MessageResource } from "./resources";
 
 export interface ThreadProperties {
   topic?: string;
+  picture?: string;
   // a timestamp ? example: "1421342788493"
   lastjoinat?: string;
   // a timestamp ? example: "1464029299838"

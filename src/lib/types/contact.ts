@@ -48,6 +48,7 @@ export interface Contact {
    */
   authCertificate?: string;
   blocked: boolean;
+  gone?: boolean;
   favorite?: boolean;
   explicit?: boolean;
   email_hashes?: any[];
@@ -70,6 +71,7 @@ export const $Contact: DocumentType<Contact> = new DocumentType<Contact>({
     authorized: {type: new BooleanType()},
     authCertificate: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
     blocked: {type: new BooleanType()},
+    gone: {type: new BooleanType(), optional: true},
     favorite: {type: new BooleanType(), optional: true},
     explicit: {type: new BooleanType(), optional: true},
     email_hashes: {type: new ArrayType({itemType: new AnyType(), maxLength: Infinity}), optional: true},
