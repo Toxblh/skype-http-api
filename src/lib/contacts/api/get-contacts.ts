@@ -8,21 +8,32 @@ import { Url } from "../../types/url";
 import * as contactsUrl from "../contacts-url";
 import { $GetUserResult, GetUserResult } from "./get-user";
 
-export async function getContacts(httpIo: io.HttpIo, apiContext: Context): Promise<Contact[]> {
+export async function getContacts(httpIo: io.HttpIo, apiContext: Context, delta: boolean = false): Promise<Contact[]> {
   // TODO: use the user contacts instead of just the user URL
   const url: Url = contactsUrl.formatUser(apiContext.username);
   const request: io.GetOptions = {
     uri: url,
-    queryString: {page_size: "100", reason: "default"},
+    queryString: {reason: "default"},
     cookies: apiContext.cookies,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
     },
     proxy: apiContext.proxy,
   };
+  const haveEtag = Boolean(apiContext.etag);
+  if (delta) {
+    request.queryString.delta = "1";
+    if (apiContext.etag) {
+      request.headers["If-None-Match"] = apiContext.etag;
+    }
+  }
   const response: io.Response = await httpIo.get(request);
   if (response.statusCode !== 200) {
     UnexpectedHttpStatusError.create(response, new Set([200]), request);
+  }
+  apiContext.etag = response.headers["etag"];
+  if (delta && !haveEtag) {
+    return [];
   }
   let parsed: any;
   try {

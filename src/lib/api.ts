@@ -90,8 +90,8 @@ export class Api extends events.EventEmitter implements ApiEvents {
     return removeUserFromContacts(this.io, this.context, contactId);
   }
 
-  async getContacts(): Promise<Contact[]> {
-    return this.contactsService.getContacts(this.context);
+  async getContacts(delta: boolean = false): Promise<Contact[]> {
+    return this.contactsService.getContacts(this.context, delta);
   }
 
   async getConversation(conversationId: string): Promise<Conversation> {

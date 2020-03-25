@@ -24,7 +24,7 @@ export interface ContactsInterface {
    * @param apiContext Current API context: with the skype token, cookies and username
    * @return The list of contacts.
    */
-  getContacts(apiContext: Context): Promise<Contact[]>;
+  getContacts(apiContext: Context, delta: boolean): Promise<Contact[]>;
 }
 
 /**
@@ -71,7 +71,7 @@ export class ContactsService {
     return result.inviteList;
   }
 
-  async getContacts(apiContext: Context): Promise<Contact[]> {
-    return getContacts(this.httpIo, apiContext);
+  async getContacts(apiContext: Context, delta: boolean = false): Promise<Contact[]> {
+    return getContacts(this.httpIo, apiContext, delta);
   }
 }

@@ -139,6 +139,8 @@ export interface Context {
   skypeToken: SkypeToken;
   registrationToken: RegistrationToken;
   proxy?: string;
+  ackId?: number;
+  etag?: string;
 }
 
 export namespace Context {
@@ -150,6 +152,8 @@ export namespace Context {
     cookies: toughCookie.CookieJar.Serialized;
     skypeToken: SkypeToken.Json;
     registrationToken: RegistrationToken.Json;
+    ackId?: number;
+    etag?: string;
   }
 
   export function toJson(context: Context): Json {
@@ -158,6 +162,8 @@ export namespace Context {
       cookies: new toughCookie.CookieJar(context.cookies).serializeSync(),
       skypeToken: SkypeToken.toJson(context.skypeToken),
       registrationToken: RegistrationToken.toJson(context.registrationToken),
+      ackId: context.ackId,
+      etag: context.etag,
     };
   }
 
@@ -172,6 +178,8 @@ export namespace Context {
       cookies,
       skypeToken: SkypeToken.fromJson(context.skypeToken),
       registrationToken: RegistrationToken.fromJson(context.registrationToken),
+      ackId: context.ackId,
+      etag: context.etag,
     };
   }
 }

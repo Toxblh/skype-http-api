@@ -18,7 +18,7 @@ export interface GetUserResult {
   /**
    * `"full" | ...`
    */
-  scope: string;
+  scope?: string;
 }
 
 /**
@@ -29,7 +29,7 @@ export const $GetUserResult: DocumentType<GetUserResult> = new DocumentType<GetU
     contacts: {type: new ArrayType({itemType: $Contact, maxLength: Infinity})},
     blocklist: {type: new ArrayType({itemType: new AnyType(), maxLength: Infinity})},
     groups: {type: new ArrayType({itemType: $ContactGroup, maxLength: Infinity})},
-    scope: {type: new Ucs2StringType({maxLength: Infinity})},
+    scope: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
   },
   changeCase: CaseStyle.SnakeCase,
 });

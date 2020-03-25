@@ -350,7 +350,7 @@ function formatEventMessage(native: nativeEvents.EventMessage): events.EventMess
       resource = formatConversationUpdateResource(native.resource as nativeResources.ConversationUpdate);
       break;
     case "MessageUpdate":
-      resource = null;
+      resource = formatMessageResource(<nativeResources.MessageResource> native.resource);
       break;
     case "NewMessage":
       resource = formatMessageResource(<nativeResources.MessageResource> native.resource);
@@ -442,16 +442,22 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
-      const uri: string = messagesUri.poll(this.apiContext.registrationToken.host);
+      const uri: string = messagesUri.poll(this.apiContext.registrationToken.host, "ME", this.apiContext.registrationToken.endpointId);
       const requestOptions: httpIo.PostOptions = {
         // TODO: explicitly define user, endpoint and subscription
         uri,
         cookies: this.apiContext.cookies,
         headers: {
           RegistrationToken: this.apiContext.registrationToken.raw,
+          EndpointId: this.apiContext.registrationToken.endpointId,
         },
         proxy: this.apiContext.proxy,
       };
+      if (this.apiContext.ackId) {
+        requestOptions.queryString = {
+          ackId: this.apiContext.ackId,
+        };
+      }
       const res: httpIo.Response = await this.io.post(requestOptions);
 
       if (res.headers["set-registrationtoken"]) {
@@ -475,6 +481,9 @@ export class MessagesPoller extends _events.EventEmitter {
       if (body.eventMessages !== undefined) {
         for (const msg of body.eventMessages) {
           const formatted: events.EventMessage = formatEventMessage(msg);
+          if (!this.apiContext.ackId || formatted.id > this.apiContext.ackId) {
+            this.apiContext.ackId = formatted.id;
+          }
           if (formatted.resource !== null) {
             this.emit("event-message", formatted);
           }
@@ -529,6 +538,9 @@ export class MessagesPoller extends _events.EventEmitter {
         for (const msg of body.eventMessages) {
           lastMsgId = msg.id;
           const formatted: events.EventMessage = formatEventMessage(msg);
+          if (!this.apiContext.ackId || formatted.id > this.apiContext.ackId) {
+            this.apiContext.ackId = formatted.id;
+          }
           if (formatted.resource !== null) {
             this.emit("event-message", formatted);
           }
