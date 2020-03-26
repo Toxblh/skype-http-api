@@ -20,7 +20,6 @@ export async function getContacts(httpIo: io.HttpIo, apiContext: Context, delta:
     },
     proxy: apiContext.proxy,
   };
-  const haveEtag = Boolean(apiContext.etag);
   if (delta) {
     request.queryString.delta = "1";
     if (apiContext.etag) {
@@ -32,9 +31,6 @@ export async function getContacts(httpIo: io.HttpIo, apiContext: Context, delta:
     UnexpectedHttpStatusError.create(response, new Set([200]), request);
   }
   apiContext.etag = response.headers["etag"];
-  if (delta && !haveEtag) {
-    return [];
-  }
   let parsed: any;
   try {
     parsed = JSON.parse(response.body);
