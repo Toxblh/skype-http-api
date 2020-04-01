@@ -421,7 +421,7 @@ export class MessagesPoller extends _events.EventEmitter {
       // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getMessagesLoop  START ~~~~~~~~~~~~~~~~~~~~~~~~~~");
       await this.getMessages();
       // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getMessagesLoop  END   ~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      this.getMessagesLoop();
+      setTimeout(this.getMessagesLoop.bind(this), 100);
     }
   }
 
@@ -448,8 +448,10 @@ export class MessagesPoller extends _events.EventEmitter {
         uri,
         cookies: this.apiContext.cookies,
         headers: {
+          Authentication: "skypetoken=" + this.apiContext.skypeToken.value,
           RegistrationToken: this.apiContext.registrationToken.raw,
           EndpointId: this.apiContext.registrationToken.endpointId,
+          BehaviorOverride: "redirectAs404",
         },
         proxy: this.apiContext.proxy,
       };
