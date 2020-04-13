@@ -8,12 +8,10 @@ import { testConfig } from "../test-config";
 const mainAccount: Credentials = testConfig.credentials;
 
 describe.skip("SkypeHttp", function () {
-  this.timeout(20000); // 20 seconds
+  this.timeout(10 * 60 * 1000); // 10 minutes
 
-  it("should connect to the main account trough authentication", async function () {
-    return SkypeHttp.connect({credentials: mainAccount, verbose: testConfig.verbose})
-      .then((api: Api) => {
-        assert.equal(api.context.username, mainAccount.username);
-      });
+  it("should connect to the main account through authentication", async function () {
+    const api: Api = await SkypeHttp.connect({credentials: mainAccount, verbose: testConfig.verbose});
+    assert.equal(api.context.username, mainAccount.username);
   });
 });

@@ -1,4 +1,7 @@
+import * as dotenv from "dotenv";
 import { Credentials } from "../lib/interfaces/api/api";
+
+dotenv.config();
 
 export interface TestConfig {
   /**
@@ -15,19 +18,16 @@ export interface TestConfig {
 
 const online: boolean = process.env["OCILO_TEST_ONLINE"] === "true";
 const verbose: boolean = process.env["OCILO_TEST_VERBOSE"] === "true";
-// TODO: Use environment (currently you have to edit this manually and remember to revert it before commiting :s)
+
 const credentials: Credentials = {
-  username: "SKYPE_USERNAME",
-  password: "SKYPE_PASSWORD",
+  username: process.env.SKYPE_USERNAME || "",
+  password: process.env.SKYPE_PASSWORD || "",
 };
 
 const secondaryAccounts: Credentials[] = [
   {
-    // replace by your username
-    username: "SKYPE_USERNAME",
-
-    // replace by your password
-    password: "SKYPE_PASSWORD",
+    username: process.env.SKYPE_USERNAME || "",
+    password: process.env.SKYPE_PASSWORD || "",
   },
 ];
 
