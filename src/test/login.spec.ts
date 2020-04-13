@@ -3,7 +3,7 @@ import { login, LoginOptions } from "../lib/login";
 import { requestIo } from "../lib/request-io";
 import { testConfig } from "./test-config";
 
-describe.skip("login", function () {
+describe("login", function () {
   describe("login", async function () {
     this.timeout(10 * 60 * 1000); // 10 minutes
 
