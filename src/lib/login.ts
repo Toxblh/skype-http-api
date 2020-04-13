@@ -116,7 +116,7 @@ async function subscribeToResources(ioOptions: IoOptions, registrationToken: Reg
    */
 
   const requestOptions: io.PostOptions = {
-    uri: messagesUri.subscriptions(registrationToken.host),
+    url: messagesUri.subscriptions(registrationToken.host),
     cookies: ioOptions.cookies,
     body: JSON.stringify(requestDocument),
     proxy,
@@ -173,14 +173,14 @@ async function createPresenceDocs(ioOptions: IoOptions, registrationToken: Regis
     },
   };
 
-  const uri: string = messagesUri.endpointMessagingService(
+  const url: string = messagesUri.endpointMessagingService(
     registrationToken.host,
     messagesUri.DEFAULT_USER,
     registrationToken.endpointId,
   );
 
   const requestOptions: io.PutOptions = {
-    uri,
+    url,
     cookies: ioOptions.cookies,
     body: JSON.stringify(requestBody),
     proxy,

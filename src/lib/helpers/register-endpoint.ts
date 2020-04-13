@@ -73,7 +73,7 @@ export async function registerEndpoint(
   // Use non-strict equality to try at least once. `tryCount` counts the number of failures.
   for (let tryCount: number = 0; tryCount <= retries; tryCount++) {
     const req: io.PostOptions = {
-      uri: messagesUri.endpoints(messagesHostname),
+      url: messagesUri.endpoints(messagesHostname),
       proxy,
       headers: {
         LockAndKey: getLockAndKeyHeader(utils.getCurrentTime()),
@@ -90,6 +90,7 @@ export async function registerEndpoint(
           "CustomUserProperties,Highlights,Casts,CortanaBot,ModernBots,AutoIdleForWebApi," +
           "secureThreads,InviteFree,SupportsReadReceipts,notificationStream",
       }),
+      throwHttpErrors: false,
     };
 
     const res: io.Response = await io.post(req);
@@ -147,7 +148,7 @@ export async function updateRegistrationInfo(
   proxy?: string,
 ): Promise<RegistrationInfo> {
   const req: io.PutOptions = {
-    uri: "https://client-s.gateway.messenger.live.com/v2/users/ME/endpoints/"
+    url: "https://client-s.gateway.messenger.live.com/v2/users/ME/endpoints/"
       + encodeURIComponent(registrationToken.endpointId),
     proxy,
     headers: {

@@ -1,7 +1,7 @@
 import cheerio from "cheerio";
 import path from "path";
 import toughCookie from "tough-cookie";
-import url from "url";
+import urlParser from "url";
 import { WrongCredentialsError } from "../errors";
 import { WrongCredentialsLimitError } from "../errors";
 import { AbuseBehavior } from "../errors/abuse-behaviour";
@@ -124,12 +124,12 @@ export interface LiveKeys {
 
 export async function getLiveKeys(options: LoadLiveKeysOptions): Promise<LiveKeys> {
   try {
-    const uri: string = url.resolve(skypeLoginUri, path.posix.join("oauth", "microsoft"));
+    const url: string = urlParser.resolve(skypeLoginUri, path.posix.join("oauth", "microsoft"));
     const queryString: { [key: string]: string } = {
       client_id: webClientLiveLoginId,
       redirect_uri: skypeWebUri,
     };
-    const getOptions: io.GetOptions = {uri, queryString, cookies: options.cookies};
+    const getOptions: io.GetOptions = {url, queryString, cookies: options.cookies};
 
     let response: io.Response;
     try {
@@ -238,7 +238,7 @@ export async function getLiveToken(options: GetLiveTokenOptions): Promise<string
 
 // Get live token from live keys and credentials
 export async function requestLiveToken(options: GetLiveTokenOptions): Promise<io.Response> {
-  const uri: string = url.resolve(liveLoginUri, path.posix.join("ppsecure", "post.srf"));
+  const url: string = urlParser.resolve(liveLoginUri, path.posix.join("ppsecure", "post.srf"));
   const queryString: { [key: string]: string } = {
     wa: "wsignin1.0",
     wp: "MBI_SSL",
@@ -262,7 +262,7 @@ export async function requestLiveToken(options: GetLiveTokenOptions): Promise<io
   };
 
   const postOptions: io.PostOptions = {
-    uri,
+    url,
     queryString,
     cookies: options.cookies,
     form: formData,
@@ -338,7 +338,7 @@ export async function checkIfUpsellIsPresentAndDismiss(html: string, options: Ge
     };
 
     const postOptions: io.PostOptions = {
-      uri: url,
+      url,
       cookies: options.cookies,
       form: formData,
       proxy: options.proxy,
@@ -352,7 +352,7 @@ export async function checkIfUpsellIsPresentAndDismiss(html: string, options: Ge
       .replace(';window.$Do && window.$Do.register(\"$Config\", 0, true);\n//]]>', ""));
 
     const cancelUpselPostOptions: io.PostOptions = {
-      uri: parse.WLXAccount.upsellAuthenticator.options.viewDefs.cancel.url,
+      url: parse.WLXAccount.upsellAuthenticator.options.viewDefs.cancel.url,
       cookies: options.cookies,
       proxy: options.proxy,
     };
@@ -451,7 +451,7 @@ export async function getSkypeToken(options: GetSkypeTokenOptions): Promise<Skyp
 }
 
 export async function requestSkypeToken(options: GetSkypeTokenOptions): Promise<io.Response> {
-  const uri: string = url.resolve(skypeLoginUri, "microsoft");
+  const url: string = urlParser.resolve(skypeLoginUri, "microsoft");
 
   const queryString: { [key: string]: string } = {
     client_id: "578134",
@@ -467,7 +467,7 @@ export async function requestSkypeToken(options: GetSkypeTokenOptions): Promise<
   };
 
   const postOptions: io.PostOptions = {
-    uri,
+    url,
     queryString,
     form: formData,
     proxy: options.proxy,

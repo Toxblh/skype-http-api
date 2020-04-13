@@ -21,10 +21,10 @@ export async function createConversation(
     members,
   };
 
-  const uri: string = messagesUri.threads(apiContext.registrationToken.host);
+  const url: string = messagesUri.threads(apiContext.registrationToken.host);
 
   const requestOptions: io.PostOptions = {
-    uri,
+    url,
     cookies: apiContext.cookies,
     body: JSON.stringify(requestBody),
     headers: {

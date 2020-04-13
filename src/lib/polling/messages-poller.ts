@@ -442,10 +442,10 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
-      const uri: string = messagesUri.poll(this.apiContext.registrationToken.host, "ME", this.apiContext.registrationToken.endpointId);
+      const url: string = messagesUri.poll(this.apiContext.registrationToken.host, "ME", this.apiContext.registrationToken.endpointId);
       const requestOptions: httpIo.PostOptions = {
         // TODO: explicitly define user, endpoint and subscription
-        uri,
+        url,
         cookies: this.apiContext.cookies,
         headers: {
           Authentication: "skypetoken=" + this.apiContext.skypeToken.value,
@@ -506,7 +506,7 @@ export class MessagesPoller extends _events.EventEmitter {
   protected async getNotifications(): Promise<void> {
     try {
       const requestOptions: httpIo.GetOptions = {
-        uri: this.notificationUri ? this.notificationUri : await messagesUri.notifications(this.io, this.apiContext),
+        url: this.notificationUri ? this.notificationUri : await messagesUri.notifications(this.io, this.apiContext),
         cookies: this.apiContext.cookies,
         headers: {
           Authentication: "skypetoken=" + this.apiContext.skypeToken.value,

@@ -18,7 +18,7 @@ export async function addUserAsContact(io: io.HttpIo,
   };
 
   const requestOptions: io.PutOptions = {
-    uri: `https://edge.skype.com/pcs-df/contacts/v2/users/${encodeURIComponent(apiContext.username)
+    url: `https://edge.skype.com/pcs-df/contacts/v2/users/${encodeURIComponent(apiContext.username)
     }/contacts/${encodeURIComponent(userId)}/explicit`,
     cookies: apiContext.cookies,
     body: JSON.stringify(requestBody),
@@ -43,7 +43,7 @@ export async function removeUserFromContacts(io: io.HttpIo,
     value: false,
   };
   const requestOptions: io.PutOptions = {
-    uri: `https://edge.skype.com/pcs-df/contacts/v2/users/${encodeURIComponent(apiContext.username)
+    url: `https://edge.skype.com/pcs-df/contacts/v2/users/${encodeURIComponent(apiContext.username)
     }/contacts/${encodeURIComponent(userId)}/explicit`,
 
     cookies: apiContext.cookies,

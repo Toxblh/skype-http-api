@@ -29,7 +29,7 @@ export async function sendMessage(
     contenttype: "text",
   };
   const requestOptions: io.PostOptions = {
-    uri: messagesUri.messages(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId),
+    url: messagesUri.messages(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId),
     cookies: apiContext.cookies,
     body: JSON.stringify(query),
     headers: {

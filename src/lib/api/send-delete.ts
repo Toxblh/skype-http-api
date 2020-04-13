@@ -16,7 +16,7 @@ export async function sendDelete(
   messageId: string,
 ): Promise<void> {
   const requestOptions: io.DeleteOptions = {
-    uri: messagesUri.message(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId, messageId),
+    url: messagesUri.message(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId, messageId),
     cookies: apiContext.cookies,
     headers: {
       RegistrationToken: apiContext.registrationToken.raw,

@@ -9,7 +9,7 @@ export async function declineContactRequest(
   contactUsername: string,
 ): Promise<void> {
   const requestOptions: io.GetOptions = {
-    uri: apiUri.authRequestDecline(apiContext.username, contactUsername),
+    url: apiUri.authRequestDecline(apiContext.username, contactUsername),
     cookies: apiContext.cookies,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,

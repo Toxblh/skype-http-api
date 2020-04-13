@@ -29,7 +29,7 @@ export async function sendImage(
   };
   const bodyNewObjectStr: string = JSON.stringify(bodyNewObject);
   const requestOptionsNewObject: io.PostOptions = {
-    uri: messagesUri.objects("api.asm.skype.com"),
+    url: messagesUri.objects("api.asm.skype.com"),
     cookies: apiContext.cookies,
     body: bodyNewObjectStr,
     headers: {
@@ -54,7 +54,7 @@ export async function sendImage(
     file = img.file;
   }
   const requestOptionsPutObject: io.PutOptions = {
-    uri: messagesUri.objectContent("api.asm.skype.com", objectId, "imgpsh"),
+    url: messagesUri.objectContent("api.asm.skype.com", objectId, "imgpsh"),
     cookies: apiContext.cookies,
     body: file,
     headers: {
@@ -95,7 +95,7 @@ export async function sendImage(
     contenttype: "text",
   };
   const requestOptions: io.PostOptions = {
-    uri: messagesUri.messages(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId),
+    url: messagesUri.messages(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId),
     cookies: apiContext.cookies,
     body: JSON.stringify(query),
     headers: {

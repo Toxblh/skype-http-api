@@ -1,10 +1,11 @@
 import { Store as CookieStore } from "tough-cookie";
 export interface BaseOptions {
-  uri: string;
+  url: string;
   cookies?: CookieStore;
   headers?: any; // {[name: string]: string};
   queryString?: any; // {[key: string]: string};
   proxy?: string;
+  throwHttpErrors?: boolean;
 }
 
 export interface GetOptions extends BaseOptions {

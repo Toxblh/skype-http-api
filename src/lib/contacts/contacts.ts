@@ -40,7 +40,7 @@ export class ContactsService {
   async getInvites(apiContext: Context): Promise<Invite[]> {
     const url: Url = contactsUrl.formatInvites(apiContext.username);
     const request: io.GetOptions = {
-      uri: url,
+      url,
       cookies: apiContext.cookies,
       headers: {
         "X-Skypetoken": apiContext.skypeToken.value,

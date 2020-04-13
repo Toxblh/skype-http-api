@@ -17,7 +17,7 @@ export async function getSelfProfile(
 ): Promise<ApiProfile> {
   const url: Url = apiUri.userProfile(apiUri.DEFAULT_USER);
   const request: io.GetOptions = {
-    uri: url,
+    url,
     cookies,
     headers: {
       "X-Skypetoken": skypeToken.value,

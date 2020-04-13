@@ -5,7 +5,7 @@ export async function addBotAsContact(io: io.HttpIo,
                                       apiContext: Context,
                                       botId: string): Promise<boolean> {
   const requestOptions: io.PutOptions = {
-    uri: `https://api.aps.skype.com/v1/relationship/me/${botId}`,
+    url: `https://api.aps.skype.com/v1/relationship/me/${botId}`,
     cookies: apiContext.cookies,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
@@ -25,7 +25,7 @@ export async function removeBotFromContacts(io: io.HttpIo,
                                             apiContext: Context,
                                             botId: string): Promise<boolean> {
   const requestOptions: io.DeleteOptions = {
-    uri: `https://api.aps.skype.com/v1/relationship/me/${botId}`,
+    url: `https://api.aps.skype.com/v1/relationship/me/${botId}`,
     cookies: apiContext.cookies,
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,

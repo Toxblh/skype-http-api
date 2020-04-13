@@ -12,7 +12,7 @@ export async function getContacts(httpIo: io.HttpIo, apiContext: Context, delta:
   // TODO: use the user contacts instead of just the user URL
   const url: Url = contactsUrl.formatUser(apiContext.username);
   const request: io.GetOptions = {
-    uri: url,
+    url,
     queryString: {reason: "default"},
     cookies: apiContext.cookies,
     headers: {

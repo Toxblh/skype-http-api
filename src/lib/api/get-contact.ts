@@ -13,7 +13,7 @@ export async function getContact(io: io.HttpIo, apiContext: Context, contactId: 
     throw new Error(`${JSON.stringify(contactId)} is not a real contact, you cannot get data for ${JSON.stringify(contactId)}`);
   }
   const requestOptions: io.PostOptions = {
-    uri: apiUri.userProfiles(),
+    url: apiUri.userProfiles(),
     cookies: apiContext.cookies,
     form: {usernames: [contactId]},
     headers: {

@@ -36,15 +36,15 @@ export async function getConversation(
     targetType: "Passport|Skype|Lync|Thread",
   };
 
-  let uri: string;
+  let url: string;
   if (conversationId.indexOf("19:") === 0) { // group discussion
-    uri = messagesUri.thread(apiContext.registrationToken.host, conversationId);
+    url = messagesUri.thread(apiContext.registrationToken.host, conversationId);
   } else { // 8: private conversation
-    uri = messagesUri.conversation(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId);
+    url = messagesUri.conversation(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId);
   }
 
   const requestOptions: io.GetOptions = {
-    uri,
+    url,
     cookies: apiContext.cookies,
     queryString: query,
     headers: {

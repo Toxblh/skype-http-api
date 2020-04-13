@@ -19,14 +19,14 @@ export async function searchSkypeDirectory(io: io.HttpIo,
     const sessionId: string  =  apiContext.registrationToken.endpointId
                                       .replace("{", "").replace("}", "");
 
-    const uri: string  = `${uriBase}searchString=${encodeURIComponent(userId)
+    const url: string  = `${uriBase}searchString=${encodeURIComponent(userId)
                           }&requestId=${Math.round((new Date()).getTime())
                           }0&sessionId=${sessionId}`;
 
     // get X-ECS-ETag from response headers and use it
     const requestOptions: io.GetOptions = {
       // tslint:disable-next-line:prefer-template
-      uri,
+      url,
       cookies: apiContext.cookies,
       proxy: apiContext.proxy,
       headers: {

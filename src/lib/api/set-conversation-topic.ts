@@ -18,10 +18,10 @@ export async function setConversationTopic(
     topic,
   };
 
-  const uri: string = messagesUri.properties(apiContext.registrationToken.host, conversationId);
+  const url: string = messagesUri.properties(apiContext.registrationToken.host, conversationId);
 
   const requestOptions: io.PutOptions = {
-    uri,
+    url,
     cookies: apiContext.cookies,
     body: JSON.stringify(requestBody),
     queryString: {name: "topic"},

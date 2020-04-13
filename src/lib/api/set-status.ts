@@ -13,7 +13,7 @@ export async function setStatus(io: io.HttpIo, apiContext: Context, status: api.
     status,
   };
   const requestOptions: io.PostOptions = {
-    uri: messagesUri.userMessagingService(apiContext.registrationToken.host),
+    url: messagesUri.userMessagingService(apiContext.registrationToken.host),
     cookies: apiContext.cookies,
     body: JSON.stringify(requestBody),
     headers: {

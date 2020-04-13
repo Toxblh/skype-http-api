@@ -21,7 +21,7 @@ export async function sendEdit(
     content: String(message.textContent),
   };
   const requestOptions: io.PutOptions = {
-    uri: messagesUri.message(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId, messageId),
+    url: messagesUri.message(apiContext.registrationToken.host, messagesUri.DEFAULT_USER, conversationId, messageId),
     cookies: apiContext.cookies,
     body: JSON.stringify(query),
     headers: {

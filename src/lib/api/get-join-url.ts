@@ -14,10 +14,10 @@ export async function getJoinUrl(io: io.HttpIo, apiContext: Context, conversatio
     threadId: conversationId,
   };
 
-  const uri: string = "https://api.scheduler.skype.com/threads";
+  const url: string = "https://api.scheduler.skype.com/threads";
 
   const requestOptions: io.PostOptions = {
-    uri,
+    url,
     cookies: apiContext.cookies,
     body: JSON.stringify(requestBody),
     headers: {
