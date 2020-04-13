@@ -1,4 +1,8 @@
 import * as buildTools from "turbo-gulp";
+import { Project } from "turbo-gulp/project";
+import { LibTarget, registerLibTasks } from "turbo-gulp/targets/lib";
+import { MochaTarget, registerMochaTasks } from "turbo-gulp/targets/mocha";
+import { NodeTarget, registerNodeTasks } from "turbo-gulp/targets/node";
 
 import gulp from "gulp";
 import minimist, { ParsedArgs } from "minimist";
@@ -13,7 +17,17 @@ const options: Options & ParsedArgs = minimist(process.argv.slice(2), {
   alias: {devDist: "dev-dist"},
 });
 
-const project: buildTools.Project = {
+const tscOptions = {
+  skipLibCheck: true,
+  noUnusedLocals: false,
+  noUnusedParameters: false,
+  typeRoots: [
+    "src/custom-typings",
+    "node_modules/@types",
+  ],
+};
+
+const project: Project = {
   root: __dirname,
   packageJson: "package.json",
   buildDir: "build",
@@ -26,9 +40,12 @@ const project: buildTools.Project = {
       },
     },
   },
+  typescript: {
+    tscOptions,
+  },
 };
 
-const lib: buildTools.LibTarget = {
+const lib: LibTarget = {
   project,
   name: "lib",
   srcDir: "src/lib",
@@ -43,10 +60,7 @@ const lib: buildTools.LibTarget = {
       tag: options.devDist !== undefined ? "next" : "latest",
     },
   },
-  customTypingsDir: "src/custom-typings",
-  tscOptions: {
-    skipLibCheck: true,
-  },
+  tscOptions,
   typedoc: {
     dir: "typedoc",
     name: "Skype Http",
@@ -60,43 +74,35 @@ const lib: buildTools.LibTarget = {
   },
 };
 
-const example: buildTools.NodeTarget = {
+const example: NodeTarget = {
   project,
   name: "example",
   srcDir: "src",
   scripts: ["example/**/*.ts", "lib/**/*.ts"],
   tsconfigJson: "src/example/tsconfig.json",
   mainModule: "example/main",
-  customTypingsDir: "src/custom-typings",
-  outModules: buildTools.OutModules.Both,
-  tscOptions: {
-    skipLibCheck: true,
-  },
+  tscOptions,
   clean: {
     dirs: ["build/example", "dist/example"],
   },
 };
 
-const test: buildTools.MochaTarget = {
+const test: MochaTarget = {
   project,
   name: "test",
   srcDir: "src",
   scripts: ["test/**/*.ts", "lib/**/*.ts"],
-  customTypingsDir: "src/custom-typings",
   tsconfigJson: "src/test/tsconfig.json",
-  outModules: buildTools.OutModules.Both,
-  tscOptions: {
-    skipLibCheck: true,
-  },
+  tscOptions,
   copy: [{files: ["test/test-resources/**/*"]}],
   clean: {
     dirs: ["build/test"],
   },
 };
 
-const libTasks: any = buildTools.registerLibTasks(gulp, lib);
-buildTools.registerMochaTasks(gulp, test);
-buildTools.registerNodeTasks(gulp, example);
+const libTasks: any = registerLibTasks(gulp, lib);
+registerMochaTasks(gulp, test);
+registerNodeTasks(gulp, example);
 buildTools.projectTasks.registerAll(gulp, project);
 
 gulp.task("all:tsconfig.json", gulp.parallel("lib:tsconfig.json", "test:tsconfig.json", "example:tsconfig.json"));
