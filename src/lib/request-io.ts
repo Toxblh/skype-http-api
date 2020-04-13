@@ -20,7 +20,22 @@ function asRequestOptions(ioOptions: io.GetOptions | io.PostOptions | io.PutOpti
   }
   if (ioOptions.cookies !== undefined) {
     delete (result as any).cookies;
-    result.cookieJar = new toughCookie.CookieJar(ioOptions.cookies);
+    const cookieJar = new toughCookie.CookieJar(ioOptions.cookies);
+    
+    result.cookieJar = {
+      setCookie: (rawCookie: string, url: string) =>
+        new Promise((resolve, reject) =>
+          cookieJar.setCookie(rawCookie, url, (err, value) =>
+            err ? reject(err) : resolve(value)
+          )
+        ),
+      getCookieString: async (url: string) =>
+        new Promise((resolve, reject) =>
+          cookieJar.getCookieString(url, (err, value) =>
+            err ? reject(err) : resolve(value)
+          )
+        )
+    };
   }
   if (ioOptions.proxy !== undefined) {
     delete (result as any).proxy;
