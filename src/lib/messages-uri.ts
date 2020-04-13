@@ -15,7 +15,7 @@ const MESSAGES_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/conversations\/([^/]+)\
 const MESSAGE_PATTERN: RegExp = /^\/v1\/users\/([^/]+)\/conversations\/([^/]+)\/messages\/([^/]+)$/;
 
 function joinPath(parts: string[]): string {
-  return path.posix.join.apply(null, parts.map((part) => encodeURIComponent(part)));
+  return path.posix.join.apply(null, parts.map(encodeURIComponent));
 }
 
 // The following functions build an array of parts to build the path

@@ -4,7 +4,7 @@ import { requestIo } from "../lib/request-io";
 import { testConfig } from "./test-config";
 
 describe.skip("login", function () {
-  describe("login", async function (this: Mocha.ISuiteCallbackContext) {
+  describe("login", async function () {
     this.timeout(10 * 60 * 1000); // 10 minutes
 
     it("Should log into the main test account", async function () {

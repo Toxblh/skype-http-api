@@ -402,7 +402,9 @@ export class MessagesPoller extends _events.EventEmitter {
     this.activeState = true;
     // moved from setInterval to setTimeout as the request
     // may resolve in ±1minute if no new messages / notifications are available
+    // tslint:disable-next-line no-floating-promises
     this.getMessagesLoop();
+    // tslint:disable-next-line no-floating-promises
     this.getNotificationsLoop(); // using this may result in double notifications
     return this;
   }
@@ -430,6 +432,7 @@ export class MessagesPoller extends _events.EventEmitter {
       // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getNotificationsRecursive  START ~~~~~~~~~~~~~~~~~~~~~~~~~~");
       await this.getNotifications();
       // console.log(new Date() +"~~~~~~~~~~~~~~~~~~~~~~~getNotificationsRecursive  END   ~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      // tslint:disable-next-line no-floating-promises
       this.getNotificationsLoop();
     }
   }
@@ -442,7 +445,11 @@ export class MessagesPoller extends _events.EventEmitter {
    */
   protected async getMessages(): Promise<void> {
     try {
-      const url: string = messagesUri.poll(this.apiContext.registrationToken.host, "ME", this.apiContext.registrationToken.endpointId);
+      const url: string = messagesUri.poll(
+        this.apiContext.registrationToken.host,
+        "ME",
+        this.apiContext.registrationToken.endpointId,
+      );
       const requestOptions: httpIo.PostOptions = {
         // TODO: explicitly define user, endpoint and subscription
         url,
@@ -465,8 +472,8 @@ export class MessagesPoller extends _events.EventEmitter {
       if (res.headers["set-registrationtoken"]) {
         const registrationTokenHeader: string = res.headers["set-registrationtoken"];
 
-        console.log("Updating registrationtoken -> getMessages() -> "
-          + res.headers["set-registrationtoken"]); // for debug, will remove
+        // for debug, will remove
+        console.log(`Updating registrationtoken -> getMessages() -> ${res.headers["set-registrationtoken"]}`);
 
         this.apiContext.registrationToken = readSetRegistrationTokenHeader(
           this.apiContext.registrationToken.host, registrationTokenHeader);
@@ -518,8 +525,8 @@ export class MessagesPoller extends _events.EventEmitter {
       if (res.headers["set-registrationtoken"]) {
         const registrationTokenHeader: string = res.headers["set-registrationtoken"];
 
-        console.log("Updating registrationtoken -> getNotifications() -> "
-          + res.headers["set-registrationtoken"]); // for debug, will remove
+        // for debug, will remove
+        console.log(`Updating registrationtoken -> getNotifications() -> ${res.headers["set-registrationtoken"]}`);
 
         this.apiContext.registrationToken = readSetRegistrationTokenHeader(
           this.apiContext.registrationToken.host, registrationTokenHeader);

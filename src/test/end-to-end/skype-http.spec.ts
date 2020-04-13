@@ -7,7 +7,7 @@ import { testConfig } from "../test-config";
 
 const mainAccount: Credentials = testConfig.credentials;
 
-describe.skip("SkypeHttp", function (this: ISuiteCallbackContext) {
+describe.skip("SkypeHttp", function () {
   this.timeout(20000); // 20 seconds
 
   it("should connect to the main account trough authentication", async function () {

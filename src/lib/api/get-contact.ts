@@ -25,7 +25,7 @@ export async function getContact(io: io.HttpIo, apiContext: Context, contactId: 
   if (res.statusCode !== 200) {
     return Promise.reject(new Incident("net", "Unable to fetch contact"));
   }
-  const bodyObj = JSON.parse(res.body)[0];
+  const bodyObj: any = JSON.parse(res.body)[0];
   if (!bodyObj || bodyObj.status) {
     return Promise.reject(new Incident("net", "Contact not found"));
   }

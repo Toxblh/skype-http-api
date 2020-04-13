@@ -1,11 +1,11 @@
 import * as fs from "async-file";
+import escapeHtml from "escape-html";
 import { Incident } from "incident";
 import * as api from "../interfaces/api/api";
 import { Context } from "../interfaces/api/context";
 import * as io from "../interfaces/http-io";
 import * as messagesUri from "../messages-uri";
 import { getCurrentTime } from "../utils";
-import escapeHtml from "escape-html";
 
 interface SendMessageResponse {
   OriginalArrivalTime: number;
@@ -72,9 +72,9 @@ export async function sendImage(
 
   const pictureUri: string = messagesUri.object("api.asm.skype.com", objectId);
   const pictureThumbnailUri: string = messagesUri.objectView("api.asm.skype.com", objectId, "imgt1");
-  const shareUri = `https://login.skype.com/login/soo?go=xmmfallback?pic=${objectId}`;
+  const shareUri: string = `https://login.skype.com/login/soo?go=xmmfallback?pic=${objectId}`;
 
-  let extraURIObject = "";
+  let extraURIObject: string = "";
   if (img.width) {
     extraURIObject += ` width="${img.width}"`;
   }

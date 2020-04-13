@@ -295,7 +295,7 @@ export async function checkIfUpsellIsPresentAndDismiss(html: string, options: Ge
       .replace('\\"', "").replace('\\"', "");
     const inputValues: any = $("input");
 
-    // noinspection TsLint
+    // tslint:disable-next-line variable-name
     let client_flight: any = "";
     let ipt: any = "";
     let pprid: any = "";

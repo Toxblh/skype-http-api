@@ -13,8 +13,8 @@ import { requestIo } from "../../lib/request-io";
 import { testConfig } from "../test-config";
 import { readTextTestResource } from "../test-resources";
 
-describe("Microsoft Account provider", function (this: Mocha.ISuiteCallbackContext) {
-  describe.skip("login", async function (this: Mocha.ISuiteCallbackContext) {
+describe("Microsoft Account provider", function () {
+  describe.skip("login", async function () {
     this.timeout(10 * 60 * 1000); // 10 minutes
 
     it("Should get a skype token for the main test account", async function () {

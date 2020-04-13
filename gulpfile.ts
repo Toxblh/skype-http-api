@@ -37,6 +37,7 @@ const project: Project = {
     configuration: {
       rules: {
         "number-literal-format": false,
+        "strict-boolean-expressions": false,
       },
     },
   },

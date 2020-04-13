@@ -1,8 +1,9 @@
 import got from "got";
 import { OptionsOfDefaultResponseBody } from "got/dist/source/create";
+import { Response } from "got/dist/source/types";
 import toughCookie from "tough-cookie";
-import * as io from "./interfaces/http-io";
 import tunnel from "tunnel";
+import * as io from "./interfaces/http-io";
 
 /**
  * Converts implementation-independant IO options to the concrete
@@ -20,26 +21,26 @@ function asRequestOptions(ioOptions: io.GetOptions | io.PostOptions | io.PutOpti
   }
   if (ioOptions.cookies !== undefined) {
     delete (result as any).cookies;
-    const cookieJar = new toughCookie.CookieJar(ioOptions.cookies);
-    
+    const cookieJar: toughCookie.CookieJar = new toughCookie.CookieJar(ioOptions.cookies);
+
     result.cookieJar = {
-      setCookie: (rawCookie: string, url: string) =>
+      setCookie: async (rawCookie: string, url: string) =>
         new Promise((resolve, reject) =>
           cookieJar.setCookie(rawCookie, url, (err, value) =>
-            err ? reject(err) : resolve(value)
-          )
+            err ? reject(err) : resolve(value),
+          ),
         ),
       getCookieString: async (url: string) =>
         new Promise((resolve, reject) =>
           cookieJar.getCookieString(url, (err, value) =>
-            err ? reject(err) : resolve(value)
-          )
-        )
+            err ? reject(err) : resolve(value),
+          ),
+        ),
     };
   }
   if (ioOptions.proxy !== undefined) {
     delete (result as any).proxy;
-    const parts = ioOptions.proxy.split(":");
+    const parts: string[] = ioOptions.proxy.split(":");
     result.agent = tunnel.httpOverHttp({ proxy: {
       host: parts[0],
       port: Number(parts[1]),
@@ -55,9 +56,9 @@ function asRequestOptions(ioOptions: io.GetOptions | io.PostOptions | io.PutOpti
  */
 export async function get(options: io.GetOptions): Promise<io.Response> {
   try {
-    const params = asRequestOptions(options);
+    const params: OptionsOfDefaultResponseBody = asRequestOptions(options);
     params.method = "GET";
-    const ret = await got(params);
+    const ret: Response<string> = await got(params);
     if (ret.statusCode === undefined) {
       throw new Error("Missing status code");
     }
@@ -78,9 +79,9 @@ export async function get(options: io.GetOptions): Promise<io.Response> {
  */
 export async function post(options: io.PostOptions): Promise<io.Response> {
   try {
-    const params = asRequestOptions(options);
+    const params: OptionsOfDefaultResponseBody = asRequestOptions(options);
     params.method = "POST";
-    const ret = await got(params);
+    const ret: Response<string> = await got(params);
     if (ret.statusCode === undefined) {
       throw new Error("Missing status code");
     }
@@ -101,9 +102,9 @@ export async function post(options: io.PostOptions): Promise<io.Response> {
  */
 export async function put(options: io.PutOptions): Promise<io.Response> {
   try {
-    const params = asRequestOptions(options);
+    const params: OptionsOfDefaultResponseBody = asRequestOptions(options);
     params.method = "PUT";
-    const ret = await got(params);
+    const ret: Response<string> = await got(params);
     if (ret.statusCode === undefined) {
       throw new Error("Missing status code");
     }
@@ -124,9 +125,9 @@ export async function put(options: io.PutOptions): Promise<io.Response> {
  */
 export async function del(options: io.DeleteOptions): Promise<io.Response> {
   try {
-    const params = asRequestOptions(options);
+    const params: OptionsOfDefaultResponseBody = asRequestOptions(options);
     params.method = "DELETE";
-    const ret = await got(params);
+    const ret: Response<string> = await got(params);
     if (ret.statusCode === undefined) {
       throw new Error("Missing status code");
     }
