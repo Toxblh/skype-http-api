@@ -15,9 +15,10 @@ export async function getContact(io: io.HttpIo, apiContext: Context, contactId: 
   const requestOptions: io.PostOptions = {
     url: apiUri.userProfiles(),
     cookies: apiContext.cookies,
-    form: {usernames: [contactId]},
+    body: "usernames[]=" + encodeURIComponent(contactId),
     headers: {
       "X-Skypetoken": apiContext.skypeToken.value,
+      "Content-Type": "application/x-www-form-urlencoded",
     },
     proxy: apiContext.proxy,
   };
