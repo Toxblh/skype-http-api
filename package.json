@@ -1,7 +1,7 @@
 {
   "name": "@sorunome/skype-http",
   "description": "Unofficial Skype API for Node.js via HTTP",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "license": "MIT",
   "main": "dist/lib/index",
   "types": "dist/lib/index.d.ts",

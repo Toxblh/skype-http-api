@@ -499,6 +499,9 @@ export class MessagesPoller extends _events.EventEmitter {
         }
       }
     } catch (err) {
+      if (!(err instanceof Error)) {
+        err = new Error(err);
+      }
       this.emit("error", Incident(err, "poll", "An error happened while processing the polled messages"));
     }
   }
@@ -557,6 +560,9 @@ export class MessagesPoller extends _events.EventEmitter {
       }
 
     } catch (err) {
+      if (!(err instanceof Error)) {
+        err = new Error(err);
+      }
       this.emit("error", Incident(err, "poll", "An error happened while processing the polled notifications"));
     }
   }
