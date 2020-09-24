@@ -123,7 +123,7 @@ export async function registerEndpoint(
     // Redirections happen mostly when 301, but sometimes when 201
     // TODO: It may have changed to mostly 404.
     if (location.host !== messagesHostname) {
-      messagesHostname = location.host;
+      messagesHostname = location.host || "";
       continue;
     }
 

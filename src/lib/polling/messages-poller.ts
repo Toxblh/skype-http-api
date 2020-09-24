@@ -225,17 +225,17 @@ type NativeFileResouce =
 
 function formatFileResource(retObj: resources.Resource, native: NativeFileResouce): resources.FileResource {
   const ret: resources.FileResource = retObj as resources.FileResource;
-  const $: CheerioStatic = cheerio.load(native.content || "");
-  const obj: Cheerio = $("URIObject");
-  ret.uri_type = obj.attr("type");
-  ret.uri = obj.attr("uri");
-  ret.uri_thumbnail = obj.attr("url_thumbnail");
-  ret.uri_w_login = $(obj.find("a")).attr("href");
+  const $: cheerio.Root = cheerio.load(native.content || "");
+  const obj: cheerio.Cheerio = $("URIObject");
+  ret.uri_type = obj.attr("type") || "";
+  ret.uri = obj.attr("uri") || "";
+  ret.uri_thumbnail = obj.attr("url_thumbnail") || "";
+  ret.uri_w_login = $(obj.find("a")).attr("href") || "";
   const sizeString: string | undefined = $(obj.find("FileSize")).attr("v");
   if (sizeString !== undefined) {
     ret.file_size = parseInt(sizeString, 10);
   }
-  ret.original_file_name = $(obj.find("OriginalName")).attr("v");
+  ret.original_file_name = $(obj.find("OriginalName")).attr("v") || "";
   return ret;
 }
 
@@ -280,16 +280,16 @@ function formatLocationResource(
   native: nativeMessageResources.LocationObject,
 ): resources.RichTextLocationResource {
   const ret: resources.RichTextLocationResource = retObj as resources.RichTextLocationResource;
-  const $: CheerioStatic = cheerio.load(native.content);
-  const obj: Cheerio = $("location");
-  ret.latitude = parseInt(obj.attr("latitude"), 10);
-  ret.longitude = parseInt(obj.attr("longitude"), 10);
-  ret.altitude = parseInt(obj.attr("altitude"), 10);
-  ret.speed = parseInt(obj.attr("speed"), 10);
-  ret.course = parseInt(obj.attr("course"), 10);
-  ret.address = obj.attr("address");
-  ret.pointOfInterest = obj.attr("pointOfInterest");
-  ret.map_url = $(obj.find("a")).attr("href");
+  const $: cheerio.Root = cheerio.load(native.content);
+  const obj: cheerio.Cheerio = $("location");
+  ret.latitude = parseInt(obj.attr("latitude") || "", 10);
+  ret.longitude = parseInt(obj.attr("longitude") || "", 10);
+  ret.altitude = parseInt(obj.attr("altitude") || "", 10);
+  ret.speed = parseInt(obj.attr("speed") || "", 10);
+  ret.course = parseInt(obj.attr("course") || "", 10);
+  ret.address = obj.attr("address") || "";
+  ret.pointOfInterest = obj.attr("pointOfInterest") || "";
+  ret.map_url = $(obj.find("a")).attr("href") || "";
   return ret;
 }
 
@@ -299,8 +299,8 @@ function formatEventCallResource(
   native: nativeMessageResources.EventCall,
 ): resources.EventCallResource {
   const ret: resources.EventCallResource = retObj as resources.EventCallResource;
-  const $: CheerioStatic = cheerio.load(native.content);
-  const type: string = $("partlist").attr("type");
+  const $: cheerio.Root = cheerio.load(native.content);
+  const type: string = $("partlist").attr("type") || "";
   switch (type) {
     case "started":
     case "ended":
@@ -313,10 +313,10 @@ function formatEventCallResource(
   let shortest: number | null = null;
   let connected: boolean = false;
   const participants: resources.CallParticipant[] = [];
-  const parts: CheerioElement[] = $("part").toArray();
+  const parts: cheerio.Element[] = $("part").toArray();
   for (const part of parts) {
-    const pjs: Cheerio = $(part);
-    const add: resources.CallParticipant = {displayName: pjs.find("name").text(), username: pjs.attr("identity")};
+    const pjs: cheerio.Cheerio = $(part);
+    const add: resources.CallParticipant = {displayName: pjs.find("name").text(), username: pjs.attr("identity") || ""};
     const duration: string | undefined = pjs.find("duration").text();
     if (duration !== undefined && duration !== "") {
       add.duration = parseInt(duration, 10);
