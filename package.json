@@ -1,5 +1,5 @@
 {
-  "name": "@sorunome/skype-http",
+  "name": "@toxblh/skype-http",
   "description": "Unofficial Skype API for Node.js via HTTP",
   "version": "1.5.2",
   "license": "MIT",
@@ -7,7 +7,7 @@
   "types": "dist/lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ocilo/skype-http.git"
+    "url": "git://github.com/toxblh/skype-http.git"
   },
   "scripts": {
     "prepare": "gulp all:tsconfig.json && gulp tslint.json && gulp dist",
@@ -87,8 +87,8 @@
     "esm": "cjs"
   },
   "bugs": {
-    "url": "https://github.com/ocilo/skype-http/issues"
+    "url": "https://github.com/toxblh/skype-http/issues"
   },
-  "homepage": "https://github.com/ocilo/skype-http#readme",
-  "author": ""
+  "homepage": "https://github.com/toxblh/skype-http#readme",
+  "author": "Anton Palgunov"
 }
