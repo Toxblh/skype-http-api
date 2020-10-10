@@ -1,0 +1,31 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    name: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v1
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
+
+# PreInstall
+    - name: add codecov
+      run: npm install -g codecov
+
+    - name: yarn install, build and test
+      run: |
+        yarn --frozen-lockfile
+        yarn test -- --colors --forceExit
+        yarn coverage
+        codecov -f coverage/*.json -t ${{ secrets.CODE_COV }}
+      env:
+        CI: true
+
