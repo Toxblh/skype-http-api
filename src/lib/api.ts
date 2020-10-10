@@ -30,9 +30,7 @@ import { MessagesPoller } from './polling/messages-poller'
 import { Contact } from './types/contact'
 import { Invite } from './types/invite'
 
-export interface ApiEvents extends NodeJS.EventEmitter {}
-
-export class Api extends events.EventEmitter implements ApiEvents {
+export class Api extends events.EventEmitter implements NodeJS.EventEmitter {
   io: HttpIo
   context: ApiContext
   messagesPoller: MessagesPoller
@@ -64,7 +62,7 @@ export class Api extends events.EventEmitter implements ApiEvents {
     return this.contactsService.getInvites(this.context)
   }
 
-  async searchSkypeDirectory(contactId: string): Promise<String> {
+  async searchSkypeDirectory(contactId: string): Promise<string> {
     return searchSkypeDirectory(this.io, this.context, contactId)
   }
 

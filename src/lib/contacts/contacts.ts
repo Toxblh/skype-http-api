@@ -1,5 +1,4 @@
 import { Incident } from 'incident'
-import { JsonReader } from 'kryo/readers/json'
 import { UnexpectedHttpStatusError } from '../errors/http'
 import { Context } from '../interfaces/api/context'
 import * as io from '../interfaces/http-io'
@@ -7,7 +6,7 @@ import { Contact } from '../types/contact'
 import { Invite } from '../types/invite'
 import { Url } from '../types/url'
 import { getContacts } from './api/get-contacts'
-import { $GetInvitesResult, GetInvitesResult } from './api/get-invites'
+import { GetInvitesResult } from './api/get-invites'
 import * as contactsUrl from './contacts-url'
 export interface ContactsInterface {
   /**
@@ -59,14 +58,10 @@ export class ContactsService {
         body: response.body,
       })
     }
-    const reader: JsonReader = new JsonReader()
+
     let result: GetInvitesResult
     try {
-      if ($GetInvitesResult.read) {
-        result = $GetInvitesResult.read(reader, response.body)
-      } else {
-        throw Error('read should always be defined')
-      }
+      result = JSON.parse(response.body)
     } catch (err) {
       throw new Incident(err, 'UnexpectedResult', { body: parsed })
     }

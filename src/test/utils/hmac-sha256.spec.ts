@@ -1,4 +1,3 @@
-import { assert } from 'chai'
 import { hmacSha256, int32ToLittleEndianHexString } from '../../lib/utils/hmac-sha256'
 
 describe('int32ToLittleEndianHexString', function () {
@@ -19,7 +18,7 @@ describe('int32ToLittleEndianHexString', function () {
   for (const item of items) {
     it(`should return "${item.expected}" for ${item.int32} (0x${item.int32.toString(16)})`, function () {
       const actual: string = int32ToLittleEndianHexString(item.int32)
-      assert.equal(actual, item.expected)
+      expect(actual).toEqual(item.expected)
     })
   }
 })
@@ -47,7 +46,7 @@ describe('hmacSha256', function () {
       const idBuffer: Buffer = Buffer.from(item.id, 'utf8')
       const keyBuffer: Buffer = Buffer.from(item.key, 'utf8')
       const actual: string = hmacSha256(inputBuffer, idBuffer, keyBuffer)
-      assert.equal(actual, item.expected)
+      expect(actual).toEqual(item.expected)
     })
   }
 })

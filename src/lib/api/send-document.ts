@@ -104,7 +104,7 @@ export async function sendDocument(
     return Promise.reject(new Incident('send-document', 'Received wrong return code in send document'))
   }
 
-  const parsed: messagesUri.MessageUri = messagesUri.parseMessage(res.headers['location'])
+  const parsed: messagesUri.MessageUri = messagesUri.parseMessage(res.headers.location)
   const body: SendMessageResponse = JSON.parse(res.body)
   return {
     clientMessageId: query.clientmessageid,

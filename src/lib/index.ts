@@ -15,6 +15,7 @@ import { Location as _Location } from './types/location'
 export { connect, ConnectOptions } from './connect'
 export { events }
 export { resources }
+// @ts-ignore
 namespace native {
   export import contact = nativeContact
   export import conversation = nativeConversation

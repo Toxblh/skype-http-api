@@ -16,8 +16,8 @@ export interface TestConfig {
   verbose: boolean
 }
 
-const online: boolean = process.env['OCILO_TEST_ONLINE'] === 'true'
-const verbose: boolean = process.env['OCILO_TEST_VERBOSE'] === 'true'
+const online: boolean = process.env.OCILO_TEST_ONLINE === 'true'
+const verbose: boolean = process.env.OCILO_TEST_VERBOSE === 'true'
 
 const credentials: Credentials = {
   username: process.env.SKYPE_USERNAME || '',

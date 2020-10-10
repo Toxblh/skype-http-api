@@ -12,7 +12,7 @@ export interface Contact {
   workloads: 'skype' | string | null // probably enum
   avatarUrl: string | null
   phones: Phone[]
-  emails?: String[]
+  emails?: string[]
   name: {
     first: string | null
     surname: string | null

@@ -2,11 +2,11 @@ import { Incident } from 'incident'
 import toughCookie from 'tough-cookie'
 import { getSelfProfile } from './api/get-self-profile'
 import * as Consts from './consts'
-import { registerEndpoint, updateRegistrationInfo } from './helpers/register-endpoint'
+import { registerEndpoint } from './helpers/register-endpoint'
 import { Credentials } from './interfaces/api/api'
 import {
   Context as ApiContext,
-  RegistrationInfo,
+  // RegistrationInfo,
   RegistrationToken,
   SkypeToken,
 } from './interfaces/api/context'

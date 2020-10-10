@@ -1,8 +1,3 @@
-import { CaseStyle } from 'kryo/case-style'
-import { AnyType } from 'kryo/types/any'
-import { ArrayType } from 'kryo/types/array'
-import { DocumentType } from 'kryo/types/document'
-
 export interface RelationshipHistory {
   /**
    * Example:
@@ -34,13 +29,3 @@ export interface RelationshipHistory {
    */
   sources: any[]
 }
-
-export const $RelationshipHistory: DocumentType<RelationshipHistory> = new DocumentType<RelationshipHistory>({
-  properties: {
-    sources: {
-      type: new ArrayType({ itemType: new AnyType(), maxLength: Infinity }),
-    },
-  },
-  changeCase: CaseStyle.SnakeCase,
-  noExtraKeys: true,
-})

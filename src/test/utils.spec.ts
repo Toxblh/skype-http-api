@@ -1,4 +1,3 @@
-import { assert } from 'chai'
 import { parseHeaderParams } from '../lib/utils'
 
 describe('parseHeaderParams', function () {
@@ -29,7 +28,7 @@ describe('parseHeaderParams', function () {
   for (const item of items) {
     it(`should parse the known header ${item.name}`, function () {
       const actual: Map<string, string> = parseHeaderParams(item.header)
-      assert.deepEqual(actual, item.expected)
+      expect(actual).toEqual(item.expected)
     })
   }
 })

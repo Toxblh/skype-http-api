@@ -1,17 +1,11 @@
-import { CaseStyle } from 'kryo/case-style'
-import { AnyType } from 'kryo/types/any'
-import { ArrayType } from 'kryo/types/array'
-import { BooleanType } from 'kryo/types/boolean'
-import { DateType } from 'kryo/types/date'
-import { DocumentType } from 'kryo/types/document'
-import { Ucs2StringType } from 'kryo/types/ucs2-string'
-import { $Agent, Agent } from './agent'
-import { $ContactProfile, ContactProfile } from './contact-profile'
-import { $DisplayName, DisplayName } from './display-name'
-import { $DisplayNameSource, DisplayNameSource } from './display-name-source'
-import { $MriKey, MriKey } from './mri-key'
-import { $Phone, Phone } from './phone'
-import { $RelationshipHistory, RelationshipHistory } from './relationship-history'
+
+import { Agent } from './agent'
+import { ContactProfile } from './contact-profile'
+import { DisplayName } from './display-name'
+import { DisplayNameSource } from './display-name-source'
+import { MriKey } from './mri-key'
+import { Phone } from './phone'
+import { RelationshipHistory } from './relationship-history'
 
 export interface Contact {
   /**
@@ -57,44 +51,3 @@ export interface Contact {
   suggested?: boolean
   phoneHashes?: any[]
 }
-
-export const $Contact: DocumentType<Contact> = new DocumentType<Contact>({
-  properties: {
-    personId: { type: $MriKey },
-    workloads: {
-      type: new Ucs2StringType({ maxLength: Infinity }),
-      optional: true,
-    },
-    mri: { type: $MriKey },
-    displayName: { type: $DisplayName },
-    displayNameSource: { type: $DisplayNameSource },
-    phones: {
-      type: new ArrayType({ itemType: $Phone, maxLength: Infinity }),
-      optional: true,
-    },
-    profile: { type: $ContactProfile, optional: true },
-    agent: { type: $Agent, optional: true },
-    authorized: { type: new BooleanType() },
-    authCertificate: {
-      type: new Ucs2StringType({ maxLength: Infinity }),
-      optional: true,
-    },
-    blocked: { type: new BooleanType() },
-    gone: { type: new BooleanType(), optional: true },
-    favorite: { type: new BooleanType(), optional: true },
-    explicit: { type: new BooleanType(), optional: true },
-    email_hashes: {
-      type: new ArrayType({ itemType: new AnyType(), maxLength: Infinity }),
-      optional: true,
-    },
-    creationTime: { type: new DateType() },
-    relationshipHistory: { type: $RelationshipHistory, optional: true },
-    suggested: { type: new BooleanType(), optional: true },
-    phoneHashes: {
-      type: new ArrayType({ itemType: new AnyType(), maxLength: Infinity }),
-      optional: true,
-    },
-  },
-  changeCase: CaseStyle.SnakeCase,
-  noExtraKeys: true,
-})

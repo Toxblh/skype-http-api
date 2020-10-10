@@ -5,7 +5,7 @@ import { testConfig } from './test-config'
 
 describe('login', function () {
   describe('login', async function () {
-    this.timeout(10 * 60 * 1000) // 10 minutes
+    // this.timeout(10 * 60 * 1000) // 10 minutes
 
     it('Should log into the main test account', async function () {
       const options: LoginOptions = {

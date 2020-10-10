@@ -10,59 +10,14 @@
     "url": "git://github.com/toxblh/skype-http.git"
   },
   "scripts": {
-    "start": "node --experimental-modules build/example/example/main.js"
-  },
-  "pre-commit": {
-    "run": [
-      "test"
-    ]
+    "start": "node --experimental-modules build/example/example/main.js",
+    "test": "jest"
   },
   "keywords": [
     "Skype",
     "Skype-Web",
     "Skype-HTTP"
   ],
-  "dependencies": {
-    "async-file": "^2.0.2",
-    "big-integer": "^1.6.48",
-    "bluebird": "^3.7.2",
-    "cheerio": "^1.0.0-rc.3",
-    "escape-html": "^1.0.3",
-    "got": "^11.7.0",
-    "incident": "^3.2.1",
-    "js-sha256": "^0.9.0",
-    "kryo": "^0.11.0",
-    "lodash": "^4.17.20",
-    "tough-cookie": "^4.0.0",
-    "tunnel": "0.0.6"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.2.13",
-    "@types/cheerio": "^0.22.22",
-    "@types/escape-html": "1.0.0",
-    "@types/form-data": "^2.5.0",
-    "@types/gulp": "^4.0.7",
-    "@types/lodash": "^4.14.161",
-    "@types/minimist": "^1.2.0",
-    "@types/mocha": "^8.0.3",
-    "@types/node": "^14.11.8",
-    "@types/tough-cookie": "^4.0.0",
-    "@types/tunnel": "0.0.1",
-    "chai": "^4.2.0",
-    "del": "^6.0.0",
-    "dotenv": "^8.2.0",
-    "fs-extra": "^9.0.1",
-    "glob": "^7.1.6",
-    "gulp": "^4.0.2",
-    "gulp-cli": "^2.3.0",
-    "minimist": "^1.2.5",
-    "mocha": "^8.1.3",
-    "pre-commit": "^1.2.2",
-    "ts-node": "^9.0.0",
-    "tslint": "^5.20.1",
-    "turbo-gulp": "^0.22.1",
-    "typescript": "^4.0.3"
-  },
   "nyc": {
     "include": [
       "build/test/lib/**/*.js",
@@ -80,8 +35,33 @@
     "esm": "cjs"
   },
   "bugs": {
-    "url": "https://github.com/toxblh/skype-http-apiissues"
+    "url": "https://github.com/toxblh/skype-http-api/issues"
   },
-  "homepage": "https://github.com/toxblh/skype-http#readme",
-  "author": "Anton Palgunov"
+  "homepage": "https://github.com/Toxblh/skype-http-api",
+  "author": "Anton Palgunov",
+  "devDependencies": {
+    "@types/cheerio": "^0.22.22",
+    "@types/escape-html": "^1.0.0",
+    "@types/jest": "^26.0.14",
+    "@types/lodash": "^4.14.161",
+    "@types/node": "^14.11.8",
+    "@types/tough-cookie": "^4.0.0",
+    "@types/tunnel": "^0.0.1",
+    "dotenv": "^8.2.0",
+    "jest": "^26.5.2",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  },
+  "dependencies": {
+    "async-file": "^2.0.2",
+    "big-integer": "^1.6.48",
+    "cheerio": "^1.0.0-rc.3",
+    "escape-html": "^1.0.3",
+    "got": "^11.7.0",
+    "incident": "^3.2.1",
+    "js-sha256": "^0.9.0",
+    "lodash": "^4.17.20",
+    "tough-cookie": "^4.0.0",
+    "tunnel": "^0.0.6"
+  }
 }

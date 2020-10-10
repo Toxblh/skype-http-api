@@ -9,7 +9,7 @@ export async function searchSkypeDirectory(
   io: io.HttpIo,
   apiContext: Context,
   userId: string
-): Promise<String> {
+): Promise<string> {
   if (VIRTUAL_CONTACTS.has(userId)) {
     // tslint:disable-next-line:max-line-length
     throw new Error(`${JSON.stringify(userId)} is not a real contact,
@@ -64,7 +64,7 @@ export async function searchSkypeDirectory(
       nodeProfileData: ProfileData
     }
 
-    results.forEach(function (value: NodeData) {
+    results.forEach((value: NodeData) => {
       searchResults.push({
         userComName: value.nodeProfileData.skypeId,
         name: value.nodeProfileData.name,

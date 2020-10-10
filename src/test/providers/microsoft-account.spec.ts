@@ -1,4 +1,3 @@
-import { assert } from 'chai'
 import { MemoryCookieStore } from 'tough-cookie'
 import { SkypeToken } from '../../lib/interfaces/api/context'
 import {
@@ -15,7 +14,7 @@ import { readTextTestResource } from '../test-resources'
 
 describe('Microsoft Account provider', function () {
   describe('login', async function () {
-    this.timeout(10 * 60 * 1000) // 10 minutes
+    // this.timeout(10 * 60 * 1000) // 10 minutes
 
     it('Should get a skype token for the main test account', async function () {
       const options: LoginOptions = {
@@ -27,10 +26,10 @@ describe('Microsoft Account provider', function () {
         cookies: new MemoryCookieStore(),
       }
       const skypeToken: SkypeToken = await login(options)
-      assert.property(skypeToken, 'value')
-      assert.property(skypeToken, 'expirationDate')
-      assert.isString(skypeToken.value)
-      assert.instanceOf(skypeToken.expirationDate, Date)
+      expect(skypeToken).toHaveProperty('value')
+      expect(skypeToken).toHaveProperty('expirationDate')
+      expect(skypeToken.value).toBeInstanceOf(String)
+      expect(skypeToken.expirationDate).toBeInstanceOf(Date)
     })
   })
 
@@ -77,7 +76,7 @@ describe('Microsoft Account provider', function () {
       it(`file: ${JSON.stringify(item.file)}`, function () {
         const html: string = readTextTestResource(item.file)
         const actualPpftKey: string = scrapLivePpftKey(html)
-        assert.strictEqual(actualPpftKey, item.expectedPpftKey)
+        expect(actualPpftKey).toStrictEqual(item.expectedPpftKey)
       })
     }
   })
@@ -101,7 +100,7 @@ describe('Microsoft Account provider', function () {
       it(`file: ${JSON.stringify(item.file)}`, function () {
         const html: string = readTextTestResource(item.file)
         const actualLiveToken: string = scrapLiveToken(html)
-        assert.strictEqual(actualLiveToken, item.expectedLiveToken)
+        expect(actualLiveToken).toStrictEqual(item.expectedLiveToken)
       })
     }
   })
@@ -127,8 +126,8 @@ describe('Microsoft Account provider', function () {
       it(`file: ${JSON.stringify(item.file)}`, function () {
         const html: string = readTextTestResource(item.file)
         const actualSkypeToken: SkypeTokenResponse = scrapSkypeTokenResponse(html)
-        assert.strictEqual(actualSkypeToken.skypetoken, item.expectedSkypeToken)
-        assert.strictEqual(actualSkypeToken.expires_in, item.expectedExpiresIn)
+        expect(actualSkypeToken.skypetoken).toStrictEqual(item.expectedSkypeToken)
+        expect(actualSkypeToken.expires_in).toStrictEqual(item.expectedExpiresIn)
       })
     }
   })

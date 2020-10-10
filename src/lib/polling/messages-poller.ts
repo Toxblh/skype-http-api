@@ -13,6 +13,7 @@ import * as nativeMessageResources from '../interfaces/native-api/message-resour
 import * as nativeResources from '../interfaces/native-api/resources'
 import * as messagesUri from '../messages-uri'
 
+// @ts-ignore
 let lastMsgId: number = 0 // this is used to make the next poll request
 // let notifUri: string;
 
@@ -170,75 +171,75 @@ function formatMessageResource(nativeResource: nativeResources.MessageResource):
       return formatMediaVideoResource(
         formatFileResource(
           formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-          <nativeMessageResources.MediaVideo>nativeResource
+          nativeResource as nativeMessageResources.MediaVideo
         ),
-        <nativeMessageResources.MediaVideo>nativeResource
+        nativeResource as nativeMessageResources.MediaVideo
       )
     case 'RichText/Media_AudioMsg':
       // tslint:disable-next-line:max-line-length
       return formatMediaAudioResource(
         formatFileResource(
           formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-          <nativeMessageResources.MediaAudio>nativeResource
+          nativeResource as nativeMessageResources.MediaAudio
         ),
-        <nativeMessageResources.MediaAudio>nativeResource
+        nativeResource as nativeMessageResources.MediaAudio
       )
     case 'RichText/Media_GenericFile':
       // tslint:disable-next-line:max-line-length
       return formatMediaGenericFileResource(
         formatFileResource(
           formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-          <nativeMessageResources.MediaGenericFile>nativeResource
+          nativeResource as nativeMessageResources.MediaGenericFile
         ),
-        <nativeMessageResources.MediaGenericFile>nativeResource
+        nativeResource as nativeMessageResources.MediaGenericFile
       )
     case 'RichText/Location':
       // tslint:disable-next-line:max-line-length
       return formatLocationResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.LocationObject>nativeResource
+        nativeResource as nativeMessageResources.LocationObject
       )
     case 'Event/Call':
       // tslint:disable-next-line:max-line-length
       return formatEventCallResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.EventCall>nativeResource
+        nativeResource as nativeMessageResources.EventCall
       )
     case 'RichText':
       // tslint:disable-next-line:max-line-length
       return formatRichTextResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.RichText>nativeResource
+        nativeResource as nativeMessageResources.RichText
       )
     case 'Text':
       // tslint:disable-next-line:max-line-length
       return formatTextResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.Text>nativeResource
+        nativeResource as nativeMessageResources.Text
       )
     case 'Control/ClearTyping':
       // tslint:disable-next-line:max-line-length
       return formatControlClearTypingResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.ControlClearTyping>nativeResource
+        nativeResource as nativeMessageResources.ControlClearTyping
       )
     case 'Control/Typing':
       // tslint:disable-next-line:max-line-length
       return formatControlTypingResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.ControlTyping>nativeResource
+        nativeResource as nativeMessageResources.ControlTyping
       )
     case 'Signal/Flamingo': // incoming call request
       // tslint:disable-next-line:max-line-length
       return formatSignalFlamingoResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.SignalFlamingo>nativeResource
+        nativeResource as nativeMessageResources.SignalFlamingo
       )
     case 'ThreadActivity/MemberConsumptionHorizonUpdate':
       // tslint:disable-next-line:max-line-length
       return formatMemberConsumptionHorizonUpdateResource(
         formatGenericMessageResource(nativeResource, nativeResource.messagetype),
-        <nativeMessageResources.MemberConsumptionHorizonUpdate>nativeResource
+        nativeResource as nativeMessageResources.MemberConsumptionHorizonUpdate
       )
     default:
       // tslint:disable-next-line:max-line-length
@@ -308,13 +309,13 @@ function formatMediaAudioResource(
 }
 
 // tslint:disable-next-line:max-line-length
-function formatUriObjectResource(
-  retObj: resources.FileResource,
-  native: nativeMessageResources.UriObject
-): resources.RichTextUriObjectResource {
-  const ret: resources.RichTextUriObjectResource = retObj as resources.RichTextUriObjectResource
-  return ret
-}
+// function formatUriObjectResource(
+//   retObj: resources.FileResource,
+//   native: nativeMessageResources.UriObject
+// ): resources.RichTextUriObjectResource {
+//   const ret: resources.RichTextUriObjectResource = retObj as resources.RichTextUriObjectResource
+//   return ret
+// }
 
 // tslint:disable-next-line:max-line-length
 function formatLocationResource(
@@ -395,10 +396,10 @@ function formatEventMessage(native: nativeEvents.EventMessage): events.EventMess
       resource = formatConversationUpdateResource(native.resource as nativeResources.ConversationUpdate)
       break
     case 'MessageUpdate':
-      resource = formatMessageResource(<nativeResources.MessageResource>native.resource)
+      resource = formatMessageResource(native.resource as nativeResources.MessageResource)
       break
     case 'NewMessage':
-      resource = formatMessageResource(<nativeResources.MessageResource>native.resource)
+      resource = formatMessageResource(native.resource as nativeResources.MessageResource)
       break
     case 'CustomUserProperties':
       resource = formatCustomUserPropertiesResource(

@@ -11,12 +11,12 @@ export function getCurrentTime(): number {
 
 /**
  * Adds zeros to the left of the string representation of number until its length is equal to len.
- * @param number
+ * @param num
  * @param len
  * @returns {string}
  */
-export function zeroPad(number: number | string, len: number): string {
-  return padLeft(number, len, '0')
+export function zeroPad(num: number | string, len: number): string {
+  return padLeft(num, len, '0')
 }
 
 export function padLeft(str: any, len: number, char: string = ' '): string {

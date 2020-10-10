@@ -1,4 +1,3 @@
-import { assert } from 'chai'
 import * as resources from '../../lib/interfaces/api/resources'
 import * as nativeMessageResources from '../../lib/interfaces/native-api/message-resources'
 import * as messagesUri from '../../lib/messages-uri'
@@ -71,13 +70,13 @@ describe('formatControlClearTypingResource', function () {
         item.nativeResource
       )
       const expected: resources.ControlClearTypingResource = item.expectedFormattedResource
-      assert.strictEqual(actual.type, expected.type)
-      assert.strictEqual(actual.id, expected.id)
-      assert.strictEqual(actual.composeTime.getTime(), expected.composeTime.getTime())
-      assert.strictEqual(actual.arrivalTime.getTime(), expected.arrivalTime.getTime())
-      assert.deepEqual(actual.from, expected.from)
-      assert.strictEqual(actual.conversation, expected.conversation)
-      assert.deepEqual(actual.native, expected.native)
+      expect(actual.type).toStrictEqual(expected.type)
+      expect(actual.id).toStrictEqual(expected.id)
+      expect(actual.composeTime.getTime()).toStrictEqual(expected.composeTime.getTime())
+      expect(actual.arrivalTime.getTime()).toStrictEqual(expected.arrivalTime.getTime())
+      expect(actual.from).toStrictEqual(expected.from)
+      expect(actual.conversation).toStrictEqual(expected.conversation)
+      expect(actual.native).toStrictEqual(expected.native)
     })
   }
 })
@@ -145,37 +144,37 @@ describe('formatControlTypingResource', function () {
         item.nativeResource
       )
       const expected: resources.ControlTypingResource = item.expectedFormattedResource
-      assert.strictEqual(actual.type, expected.type)
-      assert.strictEqual(actual.id, expected.id)
-      assert.strictEqual(actual.composeTime.getTime(), expected.composeTime.getTime())
-      assert.strictEqual(actual.arrivalTime.getTime(), expected.arrivalTime.getTime())
-      assert.deepEqual(actual.from, expected.from)
-      assert.strictEqual(actual.conversation, expected.conversation)
-      assert.deepEqual(actual.native, expected.native)
+      expect(actual.type).toStrictEqual(expected.type)
+      expect(actual.id).toStrictEqual(expected.id)
+      expect(actual.composeTime.getTime()).toStrictEqual(expected.composeTime.getTime())
+      expect(actual.arrivalTime.getTime()).toStrictEqual(expected.arrivalTime.getTime())
+      expect(actual.from).toStrictEqual(expected.from)
+      expect(actual.conversation).toStrictEqual(expected.conversation)
+      expect(actual.native).toStrictEqual(expected.native)
     })
   }
 })
 
-describe.skip('TODO: Event/Call', function () {
-  const example: any = {
-    clientmessageid: '16930058130863214577',
-    composetime: '2017-01-08T14:49:20.395Z',
-    messagetype: 'Event/Call',
-    originalarrivaltime: '2017-01-08T14:49:20.395Z',
-    type: 'Message',
-    version: '1483886960408',
-    isactive: true,
-    from: 'https://db5-client-s.gateway.messenger.live.com/v1/users/ME/contacts/8:bob',
-    id: '1483886960408',
-    conversationLink: 'https://db5-client-s.gateway.messenger.live.com/v1/users/ME/conversations/8:bob',
-    counterpartymessageid: '1483886960402',
-    imdisplayname: 'Bob',
-    // tslint:disable-next-line:max-line-length
-    ackrequired:
-      'https://db5-client-s.gateway.messenger.live.com/v1/users/ME/conversations/ALL/messages/1483886960408/ack',
-    // tslint:disable-next-line:max-line-length
-    content:
-      '<partlist type="started" alt="">\n  <part identity="bob">\n    <name>Bob</name>\n  </part>\n</partlist>',
-    skypeguid: '2ff47f4b-5b79-4076-a1ae-d34d6d89b135',
-  }
-})
+// describe.skip('TODO: Event/Call', function () {
+//   const example: any = {
+//     clientmessageid: '16930058130863214577',
+//     composetime: '2017-01-08T14:49:20.395Z',
+//     messagetype: 'Event/Call',
+//     originalarrivaltime: '2017-01-08T14:49:20.395Z',
+//     type: 'Message',
+//     version: '1483886960408',
+//     isactive: true,
+//     from: 'https://db5-client-s.gateway.messenger.live.com/v1/users/ME/contacts/8:bob',
+//     id: '1483886960408',
+//     conversationLink: 'https://db5-client-s.gateway.messenger.live.com/v1/users/ME/conversations/8:bob',
+//     counterpartymessageid: '1483886960402',
+//     imdisplayname: 'Bob',
+//     // tslint:disable-next-line:max-line-length
+//     ackrequired:
+//       'https://db5-client-s.gateway.messenger.live.com/v1/users/ME/conversations/ALL/messages/1483886960408/ack',
+//     // tslint:disable-next-line:max-line-length
+//     content:
+//       '<partlist type="started" alt="">\n  <part identity="bob">\n    <name>Bob</name>\n  </part>\n</partlist>',
+//     skypeguid: '2ff47f4b-5b79-4076-a1ae-d34d6d89b135',
+//   }
+// })

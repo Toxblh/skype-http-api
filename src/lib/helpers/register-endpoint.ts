@@ -115,7 +115,7 @@ export async function registerEndpoint(
       )
     }
 
-    const locationHeader: string | undefined = res.headers['location']
+    const locationHeader: string | undefined = res.headers.location
     if (locationHeader === undefined) {
       throw new EndpointRegistrationError(MissingHeaderError.create(res, 'Location', req), tries)
     }

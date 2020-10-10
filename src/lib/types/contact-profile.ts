@@ -1,12 +1,8 @@
-import { CaseStyle } from 'kryo/case-style'
-import { ArrayType } from 'kryo/types/array'
-import { DocumentType } from 'kryo/types/document'
-import { Ucs2StringType } from 'kryo/types/ucs2-string'
-import { $IsoDate, IsoDate } from './iso-date'
-import { $Location, Location } from './location'
-import { $Name, Name } from './name'
-import { $Phone, Phone } from './phone'
-import { $Url, Url } from './url'
+import { IsoDate } from './iso-date'
+import { Location } from './location'
+import { Name } from './name'
+import { Phone } from './phone'
+import { Url } from './url'
 
 /**
  * Represents a profile returned by the contact API v2 (contacts.skype.com/contacts/v2).
@@ -49,42 +45,3 @@ export interface ContactProfile {
   language?: string
   skype_handle?: string
 }
-
-export const $ContactProfile: DocumentType<ContactProfile> = new DocumentType<ContactProfile>({
-  properties: {
-    avatarUrl: { type: $Url, optional: true },
-    birthday: { type: $IsoDate, optional: true },
-    gender: {
-      type: new Ucs2StringType({ maxLength: Infinity }),
-      optional: true,
-    },
-    locations: {
-      type: new ArrayType({ itemType: $Location, maxLength: Infinity }),
-      optional: true,
-    },
-    phones: {
-      type: new ArrayType({ itemType: $Phone, maxLength: Infinity }),
-      optional: true,
-    },
-    mood: { type: new Ucs2StringType({ maxLength: Infinity }), optional: true },
-    name: { type: $Name, optional: true },
-    about: {
-      type: new Ucs2StringType({ maxLength: Infinity }),
-      optional: true,
-    },
-    website: {
-      type: new Ucs2StringType({ maxLength: Infinity }),
-      optional: true,
-    },
-    language: {
-      type: new Ucs2StringType({ maxLength: Infinity }),
-      optional: true,
-    },
-    skype_handle: {
-      type: new Ucs2StringType({ maxLength: Infinity }),
-      optional: true,
-    },
-  },
-  changeCase: CaseStyle.SnakeCase,
-  noExtraKeys: true,
-})

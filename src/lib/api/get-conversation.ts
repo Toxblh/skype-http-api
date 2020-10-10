@@ -9,15 +9,15 @@ import {
 import * as messagesUri from '../messages-uri'
 import { formatConversation, formatThread } from '../utils/formatters'
 
-interface ConversationBody {
-  conversations: NativeConversation[]
-  _metadata: {
-    totalCount: number
-    forwardLink: string // url
-    backwardLink: string // url
-    syncState: string // url
-  }
-}
+// interface ConversationBody {
+//   conversations: NativeConversation[]
+//   _metadata: {
+//     totalCount: number
+//     forwardLink: string // url
+//     backwardLink: string // url
+//     syncState: string // url
+//   }
+// }
 
 interface GetConversationQuery {
   startTime: string // a timestamp ?
@@ -66,9 +66,9 @@ export async function getConversation(
   const body: NativeConversation | NativeThread = JSON.parse(res.body)
 
   if (body.type === 'Thread') {
-    return formatThread(<NativeThread>body)
+    return formatThread(body as NativeThread)
   } else if (body.type === 'Conversation') {
-    return formatConversation(<NativeConversation>body)
+    return formatConversation(body as NativeConversation)
   } else {
     return Promise.reject(new Incident('unknonwn-type', 'Unknown type for conversation...'))
   }

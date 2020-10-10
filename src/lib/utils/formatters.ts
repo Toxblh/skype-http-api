@@ -69,16 +69,16 @@ export function formatContact(native: NativeContact): Contact {
 }
 
 // github:demurgos/skype-web-reversed -> jSkype/modelHelpers/contacts/dataMappers/agentToPerson.js
-function agentToPerson(native: any): any {}
+// function agentToPerson(native: any): any {}
 
 // TODO: check that the uri uses the HTTPS protocol
 function ensureHttps(uri: string) {
   return uri
 }
 
-function define(...args: any[]) {
-  return null
-}
+// function define(...args: any[]) {
+//   return null
+// }
 
 function searchContactToPerson(native: NativeSearchContact): Contact {
   let avatarUrl: string | null
@@ -138,11 +138,11 @@ function contactToPerson(native: NativeContact): Contact {
 
   // TODO(demurgos): typedef
   // tslint:disable-next-line:typedef
-  const showStrategies = {
-    ALL: 'ALL',
-    AVAILABLE_ONLY: 'AVAILABLE_ONLY',
-    AGENTS_ONLY: 'AGENTS_ONLY',
-  }
+  // const showStrategies = {
+  //   ALL: 'ALL',
+  //   AVAILABLE_ONLY: 'AVAILABLE_ONLY',
+  //   AGENTS_ONLY: 'AGENTS_ONLY',
+  // }
 
   let activityMessage: string | null
   if (native.suggested) {
@@ -151,6 +151,7 @@ function contactToPerson(native: NativeContact): Contact {
     activityMessage = native.mood === undefined ? null : native.mood
   }
 
+  // @ts-ignore
   let capabilities: string[]
   if (native.type === 'agent') {
     capabilities = native.agent.capabilities
@@ -160,6 +161,7 @@ function contactToPerson(native: NativeContact): Contact {
     capabilities = []
   }
 
+  // @ts-ignore
   let authorizationState: string
   if (native.authorized) {
     authorizationState = authorizationStates.AUTHORIZED
@@ -172,7 +174,7 @@ function contactToPerson(native: NativeContact): Contact {
   // We can safely cast here because `mriTypeFromTypeName` tests the validity of the name.
   const type: MriType = mriTypeFromTypeName(native.type as MriTypeName)
   const typeKey: MriTypeCode = mriTypeToTypeCode(type)
-  const isAgent: boolean = native.type === 'agent'
+  // const isAgent: boolean = native.type === 'agent'
 
   let avatarUrl: string | null
 
@@ -221,6 +223,7 @@ function contactToPerson(native: NativeContact): Contact {
 }
 
 // github:demurgos/skype-web-reversed -> jSkype/modelHelpers/contacts/dataMappers/dataMaps.js
+// @ts-ignore
 function phoneTypeNameToPhoneTypeKey(typeName: string) {
   switch (typeName) {
     case 'Home':
@@ -237,6 +240,7 @@ function phoneTypeNameToPhoneTypeKey(typeName: string) {
 }
 
 // github:demurgos/skype-web-reversed -> jSkype/modelHelpers/contacts/dataMappers/dataMaps.js
+// @ts-ignore
 function phoneTypeKeyToPhoneTypeName(typeKey: string) {
   switch (typeKey) {
     case '0':

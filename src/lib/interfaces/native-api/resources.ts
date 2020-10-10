@@ -1,5 +1,5 @@
-import { ParsedConversationId } from '../api/api'
-import { RichText, Text } from './message-resources'
+// import { ParsedConversationId } from '../api/api'
+import { Text } from './message-resources'
 
 export interface Resource {
   type: 'Message' | 'UserPresenceDoc' | 'EndpointPresenceDoc' | string

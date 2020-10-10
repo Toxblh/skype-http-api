@@ -20,7 +20,7 @@ export namespace WrongCredentialsLimitError {
   export type Type = WrongCredentialsLimitError
 
   export function format() {
-    return "You've tried to sign in too many times with an incorrect account or password"
+    return 'You\'ve tried to sign in too many times with an incorrect account or password'
   }
 
   export function create(username?: string): WrongCredentialsLimitError {

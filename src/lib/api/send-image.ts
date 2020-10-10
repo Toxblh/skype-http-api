@@ -111,7 +111,7 @@ export async function sendImage(
   if (res.statusCode !== 201) {
     return Promise.reject(new Incident('send-message', 'Received wrong return code'))
   }
-  const parsed: messagesUri.MessageUri = messagesUri.parseMessage(res.headers['location'])
+  const parsed: messagesUri.MessageUri = messagesUri.parseMessage(res.headers.location)
   const body: SendMessageResponse = JSON.parse(res.body)
   return {
     clientMessageId: query.clientmessageid,
