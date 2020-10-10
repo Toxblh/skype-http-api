@@ -20,7 +20,7 @@ export namespace AccountRecoverRestriction {
   export type Type = AccountRecoverRestriction
 
   export function format() {
-    return 'It looks like someone else might be using your account. You need to verify that it\'s yours.'
+    return "It looks like someone else might be using your account. You need to verify that it's yours."
   }
 
   export function create(username?: string): AccountRecoverRestriction {

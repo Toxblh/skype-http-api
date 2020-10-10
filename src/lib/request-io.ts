@@ -1,5 +1,4 @@
 import got, { Response, OptionsOfTextResponseBody } from 'got'
-// import { OptionsOfDefaultResponseBody } from 'got/dist/source/create'
 import toughCookie from 'tough-cookie'
 import tunnel from 'tunnel'
 import * as io from './interfaces/http-io'

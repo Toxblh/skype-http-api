@@ -1,0 +1,19 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "semicolon": [true, "never"],
+    "interface-name": [false],
+    "no-console": [false],
+    "quotemark": [true, "single"],
+    "no-bitwise": false,
+    "no-namespace": false,
+    "no-shadowed-variable": false,
+    "no-empty-interface": false
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": ["node_modules/**/*.{ts,tsx}", "**/*.{js,jsx,mjs,json}", "src/**/*.spec.*"]
+  }
+}

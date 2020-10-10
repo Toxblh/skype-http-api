@@ -1,4 +1,3 @@
-
 import { DisplayName } from './display-name'
 import { InviteMessage } from './invite-message'
 import { MriKey } from './mri-key'

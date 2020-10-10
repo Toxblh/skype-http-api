@@ -1,17 +1,19 @@
 {
-  "name": "@toxblh/skype-http",
+  "name": "skype-http-api",
   "description": "Unofficial Skype API for Node.js via HTTP",
-  "version": "1.5.2",
+  "version": "0.0.1",
   "license": "MIT",
-  "main": "dist/lib/index",
-  "types": "dist/lib/index.d.ts",
+  "main": "build/lib/index",
+  "types": "build/lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git://github.com/toxblh/skype-http.git"
+    "url": "git://github.com/toxblh/skype-http-api.git"
   },
   "scripts": {
-    "start": "node --experimental-modules build/example/example/main.js",
-    "test": "jest"
+    "start": "node build/example/main.js",
+    "test": "jest",
+    "build": "tsc",
+    "coverage": "jest --coverage"
   },
   "keywords": [
     "Skype",
@@ -63,5 +65,18 @@
     "lodash": "^4.17.20",
     "tough-cookie": "^4.0.0",
     "tunnel": "^0.0.6"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "testRegex": "^.+\\.spec\\.ts$"
+  },
+  "typeCoverage": {
+    "atLeast": 90
   }
 }

@@ -392,7 +392,7 @@ export function scrapLiveToken(html: string): string {
   const tokenValue: string | undefined = tokenNode.val()
   if (tokenValue === undefined || tokenValue === '') {
     if (
-      html.indexOf('sErrTxt:\'Your account or password is incorrect.') >= 0 &&
+      html.indexOf("sErrTxt:'Your account or password is incorrect.") >= 0 &&
       html.indexOf('GoogleRedirectUrl') < 0
     ) {
       throw WrongCredentialsError.create()
@@ -413,12 +413,12 @@ export function scrapLiveToken(html: string): string {
       throw GoogleAuthRequired.create()
     } else if (html.indexOf('Help us protect your account') >= 0) {
       throw MicrosoftAuthenticator.create()
-    } else if (html.indexOf('That Microsoft account doesn\\\'t exist') >= 0) {
+    } else if (html.indexOf("That Microsoft account doesn\\'t exist") >= 0) {
       throw AccountNotFound.create()
     } else if (formSubmitUrl !== undefined && formSubmitUrl !== '') {
       if (formSubmitUrl.indexOf('Abuse') >= 0) {
         throw AbuseBehavior.create()
-      // } else if (formSubmitUrl.indexOf('/login') >= 0) {
+        // } else if (formSubmitUrl.indexOf('/login') >= 0) {
       } else if (formSubmitUrl.indexOf('/remind') >= 0) {
         throw AccountUpdate.create()
       }

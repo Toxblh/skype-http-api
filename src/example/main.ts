@@ -22,13 +22,13 @@ async function promptCredentials(): Promise<Credentials> {
   const username: string = await new Promise<string>(
     (resolve: (res: string) => void, reject: (err: any) => void): void => {
       cliInterface.question('Username? ', resolve)
-    },
+    }
   )
 
   const password: string = await new Promise<string>(
     (resolve: (res: string) => void, reject: (err: any) => void): void => {
       cliInterface.question('Password? ', resolve)
-    },
+    }
   )
 
   const result: Promise<Credentials> = new Promise(
@@ -39,7 +39,7 @@ async function promptCredentials(): Promise<Credentials> {
       cliInterface.once('close', (): void => {
         resolve({ username, password })
       })
-    },
+    }
   )
 
   cliInterface.close()

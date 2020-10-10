@@ -1,4 +1,3 @@
-
 import { Agent } from './agent'
 import { ContactProfile } from './contact-profile'
 import { DisplayName } from './display-name'
