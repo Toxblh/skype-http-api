@@ -1,26 +1,28 @@
-import { Incident } from "incident";
+import { Incident } from 'incident'
 
 export namespace MicrosoftAuthenticator {
-  export type Name = "MicrosoftAuthenticator";
-  export const name: Name = "MicrosoftAuthenticator";
+  export type Name = 'MicrosoftAuthenticator'
+  export const name: Name = 'MicrosoftAuthenticator'
 
-  export interface Data {
-  }
+  export interface Data {}
 
-  export type Cause = undefined;
+  export type Cause = undefined
 }
 
-export type MicrosoftAuthenticator = Incident<MicrosoftAuthenticator.Data,
-  MicrosoftAuthenticator.Name, MicrosoftAuthenticator.Cause>;
+export type MicrosoftAuthenticator = Incident<
+  MicrosoftAuthenticator.Data,
+  MicrosoftAuthenticator.Name,
+  MicrosoftAuthenticator.Cause
+>
 
 export namespace MicrosoftAuthenticator {
-  export type Type = MicrosoftAuthenticator;
+  export type Type = MicrosoftAuthenticator
 
   export function format() {
-    return "MicrosoftAuthenticator";
+    return 'MicrosoftAuthenticator'
   }
 
   export function create(username?: string): MicrosoftAuthenticator {
-    return Incident(name, {username}, format);
+    return Incident(name, { username }, format)
   }
 }

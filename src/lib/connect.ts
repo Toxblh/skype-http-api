@@ -1,19 +1,19 @@
-import { Incident } from "incident";
-import * as api from "./api";
-import { Credentials } from "./interfaces/api/api";
-import { Context } from "./interfaces/api/context";
-import { login } from "./login";
-import { requestIo } from "./request-io";
+import { Incident } from 'incident'
+import * as api from './api'
+import { Credentials } from './interfaces/api/api'
+import { Context } from './interfaces/api/context'
+import { login } from './login'
+import { requestIo } from './request-io'
 
 export interface StateContainer {
-  state: any;
+  state: any
 }
 
 export interface ConnectOptions {
-  credentials?: Credentials;
-  state?: Context.Json;
-  verbose?: boolean;
-  proxy?: string;
+  credentials?: Credentials
+  state?: Context.Json
+  verbose?: boolean
+  proxy?: string
 }
 
 /**
@@ -24,26 +24,26 @@ export interface ConnectOptions {
  * @throws [[LoginError]]
  */
 export async function connect(options: ConnectOptions): Promise<api.Api> {
-  let apiContext: Context;
+  let apiContext: Context
   if (options.state !== undefined) {
-    apiContext = Context.fromJson(options.state);
+    apiContext = Context.fromJson(options.state)
   } else if (options.credentials !== undefined) {
     apiContext = await login({
       io: requestIo,
       credentials: options.credentials,
       verbose: options.verbose,
       proxy: options.proxy,
-    });
+    })
     if (options.verbose) {
-      console.log("Obtained context trough authentication:");
+      console.log('Obtained context trough authentication:')
       console.log({
         username: apiContext.username,
         skypeToken: apiContext.skypeToken,
         registrationToken: apiContext.registrationToken,
-      });
+      })
     }
   } else {
-    return Promise.reject(new Incident("todo", "Connect must define `credentials`"));
+    return Promise.reject(new Incident('todo', 'Connect must define `credentials`'))
   }
-  return new api.Api(apiContext, requestIo);
+  return new api.Api(apiContext, requestIo)
 }

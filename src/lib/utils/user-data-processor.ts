@@ -1,13 +1,13 @@
-import _ from "lodash";
+import _ from 'lodash'
 
 // github:demurgos/skype-web-reversed -> utils/people/userDataProcessor.js
 export function sanitizeXml(xmlString: string) {
-  return _.isString(xmlString) ? _.escape(xmlString) : "";
+  return _.isString(xmlString) ? _.escape(xmlString) : ''
 }
 
 // github:demurgos/skype-web-reversed -> utils/people/userDataProcessor.js
 export function sanitize(str: string) {
-  return String(str); // TODO!
+  return String(str) // TODO!
   // if (_.isString(str)) {
   //   var t = str,
   //     u = i.build(r);

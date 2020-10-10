@@ -1,11 +1,11 @@
-import toughCookie from "tough-cookie";
+import toughCookie from 'tough-cookie'
 
 /**
  * Represents the OAuth token used for most calls to the Skype API.
  */
 export interface SkypeToken {
-  value: string;
-  expirationDate: Date;
+  value: string
+  expirationDate: Date
 }
 
 export namespace SkypeToken {
@@ -13,8 +13,8 @@ export namespace SkypeToken {
    * JSON-safe representation of `SkypeToken`, used for serialization.
    */
   export interface Json {
-    value: string;
-    expirationDate: string;
+    value: string
+    expirationDate: string
   }
 
   /**
@@ -24,7 +24,7 @@ export namespace SkypeToken {
     return {
       value: token.value,
       expirationDate: token.expirationDate.toISOString(),
-    };
+    }
   }
 
   /**
@@ -34,7 +34,7 @@ export namespace SkypeToken {
     return {
       value: token.value,
       expirationDate: new Date(token.expirationDate),
-    };
+    }
   }
 }
 
@@ -46,11 +46,11 @@ export namespace SkypeToken {
  * - get conversations list
  */
 export interface RegistrationToken {
-  value: string;
-  expirationDate: Date;
-  endpointId: string;
-  host: string;
-  raw: string;
+  value: string
+  expirationDate: Date
+  endpointId: string
+  host: string
+  raw: string
 }
 
 /**
@@ -77,17 +77,17 @@ export interface RegistrationToken {
 }
  */
 export interface RegistrationInfo {
-  id: string;
-  endpointFeatures: string;
-  subscriptions: Subscriptions[];
-  isActiveUrl: string;
-  longPollActiveTimeoutSupport: string;
+  id: string
+  endpointFeatures: string
+  subscriptions: Subscriptions[]
+  isActiveUrl: string
+  longPollActiveTimeoutSupport: string
 }
 
 export interface Subscriptions {
-  channelType: string;
-  interestedResources: any;
-  longPollUrl: string;
+  channelType: string
+  interestedResources: any
+  longPollUrl: string
 }
 
 export namespace RegistrationToken {
@@ -95,11 +95,11 @@ export namespace RegistrationToken {
    * JSON-safe representation of `RegistrationToken`, used for serialization.
    */
   export interface Json {
-    value: string;
-    expirationDate: string;
-    endpointId: string;
-    host: string;
-    raw: string;
+    value: string
+    expirationDate: string
+    endpointId: string
+    host: string
+    raw: string
   }
 
   /**
@@ -112,7 +112,7 @@ export namespace RegistrationToken {
       endpointId: token.endpointId,
       host: token.host,
       raw: token.raw,
-    };
+    }
   }
 
   /**
@@ -125,7 +125,7 @@ export namespace RegistrationToken {
       endpointId: token.endpointId,
       host: token.host,
       raw: token.raw,
-    };
+    }
   }
 }
 
@@ -134,13 +134,13 @@ export namespace RegistrationToken {
  */
 // TODO(demurgos): Rename to `State` or even `ApiState` so it's easier to understand the purpose of this interface.
 export interface Context {
-  username: string;
-  cookies: toughCookie.Store;
-  skypeToken: SkypeToken;
-  registrationToken: RegistrationToken;
-  proxy?: string;
-  ackId?: number;
-  etag?: string;
+  username: string
+  cookies: toughCookie.Store
+  skypeToken: SkypeToken
+  registrationToken: RegistrationToken
+  proxy?: string
+  ackId?: number
+  etag?: string
 }
 
 export namespace Context {
@@ -148,12 +148,12 @@ export namespace Context {
    * JSON-safe representation of `Context`.
    */
   export interface Json {
-    username: string;
-    cookies: toughCookie.CookieJar.Serialized;
-    skypeToken: SkypeToken.Json;
-    registrationToken: RegistrationToken.Json;
-    ackId?: number;
-    etag?: string;
+    username: string
+    cookies: toughCookie.CookieJar.Serialized
+    skypeToken: SkypeToken.Json
+    registrationToken: RegistrationToken.Json
+    ackId?: number
+    etag?: string
   }
 
   export function toJson(context: Context): Json {
@@ -164,14 +164,14 @@ export namespace Context {
       registrationToken: RegistrationToken.toJson(context.registrationToken),
       ackId: context.ackId,
       etag: context.etag,
-    };
+    }
   }
 
   export function fromJson(context: Json): Context {
-    const cookies: toughCookie.MemoryCookieStore = new toughCookie.MemoryCookieStore();
+    const cookies: toughCookie.MemoryCookieStore = new toughCookie.MemoryCookieStore()
     // TODO: Send a PR to DefinitelyTyped to fix this
-    type DeserializeSync = (cookies: toughCookie.CookieJar.Serialized, store: toughCookie.Store) => void;
-    (toughCookie.CookieJar.deserializeSync as DeserializeSync)(context.cookies, cookies);
+    type DeserializeSync = (cookies: toughCookie.CookieJar.Serialized, store: toughCookie.Store) => void
+    ;(toughCookie.CookieJar.deserializeSync as DeserializeSync)(context.cookies, cookies)
 
     return {
       username: context.username,
@@ -180,6 +180,6 @@ export namespace Context {
       registrationToken: RegistrationToken.fromJson(context.registrationToken),
       ackId: context.ackId,
       etag: context.etag,
-    };
+    }
   }
 }

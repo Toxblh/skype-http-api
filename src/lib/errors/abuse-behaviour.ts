@@ -1,26 +1,24 @@
-import { Incident } from "incident";
+import { Incident } from 'incident'
 
 export namespace AbuseBehavior {
-  export type Name = "AbuseBehavior";
-  export const name: Name = "AbuseBehavior";
+  export type Name = 'AbuseBehavior'
+  export const name: Name = 'AbuseBehavior'
 
-  export interface Data {
-  }
+  export interface Data {}
 
-  export type Cause = undefined;
+  export type Cause = undefined
 }
 
-export type AbuseBehavior = Incident<AbuseBehavior.Data,
-  AbuseBehavior.Name, AbuseBehavior.Cause>;
+export type AbuseBehavior = Incident<AbuseBehavior.Data, AbuseBehavior.Name, AbuseBehavior.Cause>
 
 export namespace AbuseBehavior {
-  export type Type = AbuseBehavior;
+  export type Type = AbuseBehavior
 
   export function format() {
-    return "AbuseBehavior";
+    return 'AbuseBehavior'
   }
 
   export function create(username?: string): AbuseBehavior {
-    return Incident(name, {username}, format);
+    return Incident(name, { username }, format)
   }
 }

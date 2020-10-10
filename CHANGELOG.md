@@ -14,9 +14,9 @@
 # 0.0.14 (2018-01-12)
 
 - **[Breaking change]** Use contacts API v2: the new types are in `lib/types`, the old types
-    remain in `lib/interfaces`. The main difference is that the MRI key (`8:user_id`) is no longer
-    parsed and most of the contact details are now in a `Profile` object.
-    It is no longer possible to get a single contact.
+  remain in `lib/interfaces`. The main difference is that the MRI key (`8:user_id`) is no longer
+  parsed and most of the contact details are now in a `Profile` object.
+  It is no longer possible to get a single contact.
 - **[Feature]** Expose detailed errors for endpoint registration.
 - **[Feature]** Support ES modules (ESM)
 - **[Fix]** Add support email login (#58)

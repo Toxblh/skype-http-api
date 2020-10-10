@@ -19,10 +19,7 @@
     "inlineSourceMap": false,
     "inlineSources": false,
     "isolatedModules": false,
-    "lib": [
-      "es2017",
-      "esnext.asynciterable"
-    ],
+    "lib": ["es2017", "esnext.asynciterable"],
     "locale": "en-us",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -51,9 +48,6 @@
     "suppressImplicitAnyIndexErrors": false,
     "target": "es2017",
     "traceResolution": false,
-    "typeRoots": [
-      "src/custom-typings",
-      "node_modules/@types"
-    ]
+    "typeRoots": ["src/custom-typings", "node_modules/@types"]
   }
 }

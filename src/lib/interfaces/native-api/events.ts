@@ -4,36 +4,42 @@ import {
   MessageResource,
   Resource,
   UserPresenceResource,
-} from "./resources";
+} from './resources'
 
 export interface EventMessage {
-  id: number;
-  type: "EventMessage";
+  id: number
+  type: 'EventMessage'
   // TODO: check the available types
-  resourceType: "NewMessage" | "UserPresence" | "EndpointPresence" | "ConversationUpdate"
-    | "CustomUserProperties" | "MessageUpdate" | string;
-  time: string;
+  resourceType:
+    | 'NewMessage'
+    | 'UserPresence'
+    | 'EndpointPresence'
+    | 'ConversationUpdate'
+    | 'CustomUserProperties'
+    | 'MessageUpdate'
+    | string
+  time: string
   // https://{host}/v1/users/ME/conversations/{conversation}/messages/{id}
-  resourceLink: string;
-  resource: Resource;
+  resourceLink: string
+  resource: Resource
 }
 
 export interface EventNewMessage extends EventMessage {
-  resourceType: "NewMessage";
-  resource: MessageResource;
+  resourceType: 'NewMessage'
+  resource: MessageResource
 }
 
 export interface EventUserPresence extends EventMessage {
-  resourceType: "UserPresence";
-  resource: UserPresenceResource;
+  resourceType: 'UserPresence'
+  resource: UserPresenceResource
 }
 
 export interface EventEndpointPresence extends EventMessage {
-  resourceType: "EndpointPresence";
-  resource: EndpointPresenceResource;
+  resourceType: 'EndpointPresence'
+  resource: EndpointPresenceResource
 }
 
 export interface CustomUserPropertiesEvent {
-  resourceType: "CustomUserProperties";
-  resource: CustomUserPropertiesResource;
+  resourceType: 'CustomUserProperties'
+  resource: CustomUserPropertiesResource
 }

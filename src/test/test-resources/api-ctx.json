@@ -37,9 +37,7 @@
           "path": "/",
           "secure": true,
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:40.198Z",
           "lastAccessed": "2017-01-08T12:19:41.312Z"
@@ -51,9 +49,7 @@
           "path": "/",
           "secure": true,
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": true,
           "creation": "2017-01-08T12:19:40.199Z",
           "lastAccessed": "2017-01-08T12:19:40.399Z"
@@ -64,9 +60,7 @@
           "domain": "login.live.com",
           "path": "/",
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:40.199Z",
           "lastAccessed": "2017-01-08T12:19:41.312Z"
@@ -88,9 +82,7 @@
           "path": "/",
           "secure": true,
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:41.312Z",
           "lastAccessed": "2017-01-08T12:19:41.312Z"
@@ -100,9 +92,7 @@
           "value": "1",
           "domain": "live.com",
           "path": "/",
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:41.313Z",
           "lastAccessed": "2017-01-08T12:21:10.961Z"
@@ -166,9 +156,7 @@
           "value": "1",
           "domain": "login.live.com",
           "path": "/",
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:41.315Z",
           "lastAccessed": "2017-01-08T12:19:41.315Z"
@@ -181,9 +169,7 @@
           "path": "/",
           "secure": true,
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:41.316Z",
           "lastAccessed": "2017-01-08T12:19:41.316Z"
@@ -194,9 +180,7 @@
           "domain": "login.live.com",
           "path": "/",
           "secure": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:41.316Z",
           "lastAccessed": "2017-01-08T12:19:41.316Z"
@@ -206,9 +190,7 @@
           "value": "0",
           "domain": "login.live.com",
           "path": "/",
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-08T12:19:41.316Z",
           "lastAccessed": "2017-01-08T12:19:41.316Z"

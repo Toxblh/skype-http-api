@@ -38,9 +38,7 @@
           "path": "/",
           "secure": true,
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-07T23:38:38.659Z",
           "lastAccessed": "2017-01-07T23:38:38.858Z"
@@ -52,9 +50,7 @@
           "path": "/",
           "secure": true,
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": true,
           "creation": "2017-01-07T23:38:38.660Z",
           "lastAccessed": "2017-01-07T23:38:38.858Z"
@@ -66,9 +62,7 @@
           "path": "/",
           "secure": true,
           "httpOnly": true,
-          "extensions": [
-            "version=1"
-          ],
+          "extensions": ["version=1"],
           "hostOnly": false,
           "creation": "2017-01-07T23:38:38.660Z",
           "lastAccessed": "2017-01-07T23:38:38.858Z"

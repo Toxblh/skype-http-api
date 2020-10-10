@@ -18,12 +18,12 @@
  */
 // tslint:enable
 
-import { Incident } from "incident";
+import { Incident } from 'incident'
 
 /**
  * Represents a well-formed MRI key.
  */
-export type MriKey = string;
+export type MriKey = string
 
 /**
  * Represents a parsed MRI key
@@ -32,29 +32,29 @@ export interface ParsedMriKey {
   /**
    * MRI type.
    */
-  type: MriType;
+  type: MriType
 
   /**
    * MRI id, cannot begin by `\d+:`.
    */
-  id: string;
+  id: string
 }
 
 export enum MriType {
-  Agent = "agent",
-  Lync = "lync",
-  Msn = "msn",
-  Skype = "skype",
+  Agent = 'agent',
+  Lync = 'lync',
+  Msn = 'msn',
+  Skype = 'skype',
   /**
    * Public switched telephone network
    */
-  Pstn = "pstn",
+  Pstn = 'pstn',
 
   /**
    * This is not the official name (but it is likely).
    * This MRI type was added to properly handle the type code `19`.
    */
-  GroupConversation = "group_conversation",
+  GroupConversation = 'group_conversation',
 }
 
 /**
@@ -62,47 +62,47 @@ export enum MriType {
  *
  * @internal
  */
-export type MriTypeCode = "1" | "2" | "4" | "8" | "19" | "28";
+export type MriTypeCode = '1' | '2' | '4' | '8' | '19' | '28'
 
 const MRI_TYPE_TO_TYPE_CODE: Map<MriType, MriTypeCode> = new Map<MriType, MriTypeCode>([
-  [MriType.Agent, "28"],
-  [MriType.Lync, "2"],
-  [MriType.Msn, "1"],
-  [MriType.Skype, "8"],
-  [MriType.Pstn, "4"],
-  [MriType.GroupConversation, "19"],
-]);
+  [MriType.Agent, '28'],
+  [MriType.Lync, '2'],
+  [MriType.Msn, '1'],
+  [MriType.Skype, '8'],
+  [MriType.Pstn, '4'],
+  [MriType.GroupConversation, '19'],
+])
 
-const MRI_TYPE_FROM_TYPE_CODE: Map<MriTypeCode, MriType> = reverseMap(MRI_TYPE_TO_TYPE_CODE);
+const MRI_TYPE_FROM_TYPE_CODE: Map<MriTypeCode, MriType> = reverseMap(MRI_TYPE_TO_TYPE_CODE)
 
 /**
  * Represents a valid MRI type name.
  *
  * @internal
  */
-export type MriTypeName = "agent" | "lync" | "msn" | "skype" | "pstn" | "group_conversation";
+export type MriTypeName = 'agent' | 'lync' | 'msn' | 'skype' | 'pstn' | 'group_conversation'
 
 const MRI_TYPE_TO_TYPE_NAME: Map<MriType, MriTypeName> = new Map<MriType, MriTypeName>([
-  [MriType.Agent, "agent"],
-  [MriType.Lync, "lync"],
-  [MriType.Msn, "msn"],
-  [MriType.Skype, "skype"],
-  [MriType.Pstn, "pstn"],
-  [MriType.GroupConversation, "group_conversation"],
-]);
+  [MriType.Agent, 'agent'],
+  [MriType.Lync, 'lync'],
+  [MriType.Msn, 'msn'],
+  [MriType.Skype, 'skype'],
+  [MriType.Pstn, 'pstn'],
+  [MriType.GroupConversation, 'group_conversation'],
+])
 
-const MRI_TYPE_FROM_TYPE_NAME: Map<MriTypeName, MriType> = reverseMap(MRI_TYPE_TO_TYPE_NAME);
+const MRI_TYPE_FROM_TYPE_NAME: Map<MriTypeName, MriType> = reverseMap(MRI_TYPE_TO_TYPE_NAME)
 
 // TODO: Move outside of this module
 function reverseMap<K, V>(source: Map<K, V>): Map<V, K> {
-  const result: Map<V, K> = new Map();
+  const result: Map<V, K> = new Map()
   for (const [key, value] of source.entries()) {
     if (result.has(value)) {
-      throw new Incident("DuplicateValue", {map: source});
+      throw new Incident('DuplicateValue', { map: source })
     }
-    result.set(value, key);
+    result.set(value, key)
   }
-  return result;
+  return result
 }
 
 /**
@@ -113,11 +113,11 @@ function reverseMap<K, V>(source: Map<K, V>): Map<V, K> {
  * @internal
  */
 export function mriTypeToTypeCode(type: MriType): MriTypeCode {
-  const result: MriTypeCode | undefined = MRI_TYPE_TO_TYPE_CODE.get(type);
+  const result: MriTypeCode | undefined = MRI_TYPE_TO_TYPE_CODE.get(type)
   if (result === undefined) {
-    throw new Incident("UnknownMriType", {type});
+    throw new Incident('UnknownMriType', { type })
   }
-  return result;
+  return result
 }
 
 /**
@@ -128,11 +128,11 @@ export function mriTypeToTypeCode(type: MriType): MriTypeCode {
  * @internal
  */
 export function mriTypeFromTypeCode(typeCode: MriTypeCode): MriType {
-  const result: MriType | undefined = MRI_TYPE_FROM_TYPE_CODE.get(typeCode);
+  const result: MriType | undefined = MRI_TYPE_FROM_TYPE_CODE.get(typeCode)
   if (result === undefined) {
-    throw new Incident("UnknownMriTypeCode", {typeCode});
+    throw new Incident('UnknownMriTypeCode', { typeCode })
   }
-  return result;
+  return result
 }
 
 /**
@@ -143,11 +143,11 @@ export function mriTypeFromTypeCode(typeCode: MriTypeCode): MriType {
  * @internal
  */
 export function mriTypeToTypeName(type: MriType): MriTypeName {
-  const result: MriTypeName | undefined = MRI_TYPE_TO_TYPE_NAME.get(type);
+  const result: MriTypeName | undefined = MRI_TYPE_TO_TYPE_NAME.get(type)
   if (result === undefined) {
-    throw new Incident("UnknownMriType", {type});
+    throw new Incident('UnknownMriType', { type })
   }
-  return result;
+  return result
 }
 
 /**
@@ -158,11 +158,11 @@ export function mriTypeToTypeName(type: MriType): MriTypeName {
  * @internal
  */
 export function mriTypeFromTypeName(typeName: MriTypeName): MriType {
-  const result: MriType | undefined = MRI_TYPE_FROM_TYPE_NAME.get(typeName);
+  const result: MriType | undefined = MRI_TYPE_FROM_TYPE_NAME.get(typeName)
   if (result === undefined) {
-    throw new Incident("UnknownMriTypeName", {typeName});
+    throw new Incident('UnknownMriTypeName', { typeName })
   }
-  return result;
+  return result
 }
 
 /**
@@ -178,14 +178,14 @@ export function mriTypeFromTypeName(typeName: MriTypeName): MriType {
  * Instead of that, our pattern parses to the type code `"4"` and id `"8:bob"` (but then
  * the parse function throws an error because the `id` is invalid).
  */
-const MRI_KEY_PATTERN: RegExp = /^(\d+):([\s\S]+)$/;
+const MRI_KEY_PATTERN: RegExp = /^(\d+):([\s\S]+)$/
 
 export function getId(mriKey: MriKey): string {
-  return parse(mriKey).id;
+  return parse(mriKey).id
 }
 
 export function getType(mriKey: MriKey): MriType {
-  return parse(mriKey).type;
+  return parse(mriKey).type
 }
 
 /**
@@ -197,7 +197,7 @@ export function getType(mriKey: MriKey): MriType {
  * @return Boolean indicating if `id` is a PSTN id
  */
 export function isPstnId(id: string): boolean {
-  return /^(?:\+)?\d+$/.test(id);
+  return /^(?:\+)?\d+$/.test(id)
 }
 
 /**
@@ -209,7 +209,7 @@ export function isPstnId(id: string): boolean {
  * @return Boolean indicating if `id` is a guest id
  */
 export function isGuestId(id: string): boolean {
-  return /^guest:/.test(id);
+  return /^guest:/.test(id)
 }
 
 /**
@@ -219,7 +219,7 @@ export function isGuestId(id: string): boolean {
  * @return Boolean indicating if `str` is a well-formed MRI key
  */
 export function isMriKey(str: string): str is MriKey {
-  return /^(?:(\d+):)+/.test(str);
+  return /^(?:(\d+):)+/.test(str)
 }
 
 /**
@@ -234,39 +234,39 @@ export function isMriKey(str: string): str is MriKey {
  */
 export function asMriKey(mriKeyOrId: MriKey | string, type: MriType): MriKey {
   if (isMriKey(mriKeyOrId)) {
-    return mriKeyOrId;
+    return mriKeyOrId
   }
-  const id: string = mriKeyOrId;
+  const id: string = mriKeyOrId
   if (isPstnId(id)) {
     // TODO: We are enforcing the PSTN type. We should check the value of `type` and raise a
     //       warning if it is not Pstn.
-    return format({type: MriType.Pstn, id});
+    return format({ type: MriType.Pstn, id })
   } else {
-    return format({type, id});
+    return format({ type, id })
   }
 }
 
 function isValidId(id: string): boolean {
-  return !MRI_KEY_PATTERN.test(id);
+  return !MRI_KEY_PATTERN.test(id)
 }
 
 export function format(mri: ParsedMriKey): MriKey {
   if (!isValidId(mri.id)) {
-    throw new Incident("InvalidMriId", {id: mri.id});
+    throw new Incident('InvalidMriId', { id: mri.id })
   }
-  return `${mriTypeToTypeCode(mri.type)}:${mri.id}`;
+  return `${mriTypeToTypeCode(mri.type)}:${mri.id}`
 }
 
 export function parse(mri: MriKey): ParsedMriKey {
-  const match: RegExpExecArray | null = MRI_KEY_PATTERN.exec(mri);
+  const match: RegExpExecArray | null = MRI_KEY_PATTERN.exec(mri)
   if (match === null) {
-    throw new Incident("InvalidMriKey", {key: mri});
+    throw new Incident('InvalidMriKey', { key: mri })
   }
   // We can cast here because `mriTypeFromTypeCode` tests the validity of the MRI code.
-  const type: MriType = mriTypeFromTypeCode(match[1] as MriTypeCode);
-  const id: string = match[2];
+  const type: MriType = mriTypeFromTypeCode(match[1] as MriTypeCode)
+  const id: string = match[2]
   if (isValidId(id)) {
-    throw new Incident("InvalidMriId", {id});
+    throw new Incident('InvalidMriId', { id })
   }
-  return {type, id};
+  return { type, id }
 }

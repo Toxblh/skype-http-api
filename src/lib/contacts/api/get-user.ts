@@ -1,24 +1,24 @@
-import { CaseStyle } from "kryo/case-style";
-import { AnyType } from "kryo/types/any";
-import { ArrayType } from "kryo/types/array";
-import { DocumentType } from "kryo/types/document";
-import { Ucs2StringType } from "kryo/types/ucs2-string";
-import { $Contact, Contact } from "../../types/contact";
-import { $ContactGroup, ContactGroup } from "../../types/contact-group";
+import { CaseStyle } from 'kryo/case-style'
+import { AnyType } from 'kryo/types/any'
+import { ArrayType } from 'kryo/types/array'
+import { DocumentType } from 'kryo/types/document'
+import { Ucs2StringType } from 'kryo/types/ucs2-string'
+import { $Contact, Contact } from '../../types/contact'
+import { $ContactGroup, ContactGroup } from '../../types/contact-group'
 
 /**
  * @internal
  */
 export interface GetUserResult {
-  contacts: Contact[];
+  contacts: Contact[]
   // TODO(demurgos): Rename to `blockList`?
   // {mri: MriKey}[]
-  blocklist: any[];
-  groups: ContactGroup[];
+  blocklist: any[]
+  groups: ContactGroup[]
   /**
    * `"full" | ...`
    */
-  scope?: string;
+  scope?: string
 }
 
 /**
@@ -26,10 +26,19 @@ export interface GetUserResult {
  */
 export const $GetUserResult: DocumentType<GetUserResult> = new DocumentType<GetUserResult>({
   properties: {
-    contacts: {type: new ArrayType({itemType: $Contact, maxLength: Infinity})},
-    blocklist: {type: new ArrayType({itemType: new AnyType(), maxLength: Infinity})},
-    groups: {type: new ArrayType({itemType: $ContactGroup, maxLength: Infinity})},
-    scope: {type: new Ucs2StringType({maxLength: Infinity}), optional: true},
+    contacts: {
+      type: new ArrayType({ itemType: $Contact, maxLength: Infinity }),
+    },
+    blocklist: {
+      type: new ArrayType({ itemType: new AnyType(), maxLength: Infinity }),
+    },
+    groups: {
+      type: new ArrayType({ itemType: $ContactGroup, maxLength: Infinity }),
+    },
+    scope: {
+      type: new Ucs2StringType({ maxLength: Infinity }),
+      optional: true,
+    },
   },
   changeCase: CaseStyle.SnakeCase,
-});
+})

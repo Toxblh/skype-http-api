@@ -1,4 +1,4 @@
-export const dirname: string = __dirname;
+export const dirname: string = __dirname
 
 // tslint:disable-next-line:no-default-export
-export default {dirname};
+export default { dirname }
