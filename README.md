@@ -7,6 +7,8 @@
 Unofficial Skype API for Node.js via HTTP.
 This relies on the Skype Web Application and requires the credentials of the account you want to use: use it with care.
 
+## [Documentation](https://toxblh.github.io/skype-http-api/)
+
 ## Installation
 
 - Stable version:
