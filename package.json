@@ -10,7 +10,7 @@
     "url": "git://github.com/toxblh/skype-http-api.git"
   },
   "scripts": {
-    "start": "node build/example/main.js",
+    "start": "node build/example/test.js",
     "prepare": "npm run build",
     "build": "tsc",
     "test": "jest",

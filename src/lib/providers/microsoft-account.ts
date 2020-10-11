@@ -220,7 +220,8 @@ export interface GetLiveTokenOptions {
 export async function getLiveToken(options: GetLiveTokenOptions): Promise<string> {
   try {
     const response: io.Response = await requestLiveToken(options)
-    const htmlResponse: any = await checkIfUpsellIsPresentAndDismiss(response.body, options)
+    let htmlUpsell: string = await checkIfUpsellIsPresentAndDismiss(response.body, options)
+    let htmlResponse: string = await requestStaySignedIn(htmlUpsell, options)
     return scrapLiveToken(htmlResponse)
   } catch (_err) {
     const err:
@@ -242,6 +243,47 @@ export async function getLiveToken(options: GetLiveTokenOptions): Promise<string
         throw _err
     }
   }
+}
+
+export async function requestStaySignedIn(htmlResponse: string, options: GetLiveTokenOptions): Promise<string> {
+  if (htmlResponse.indexOf('ConvergedKmsiStrings') <= 0) {
+    return htmlResponse
+  }
+
+  let regURL = /urlPost:'([a-zA-Z0-9a-zA-Z0-9()@:%_\+\.,~#?&\/=]*)',/
+  let regFT = /sFT:'([a-zA-Z0-9!$*#]*)',/
+
+  const matchURL = htmlResponse.match(regURL) || []
+  const matchFT = htmlResponse.match(regFT) || []
+
+  let url = matchURL[1]
+  let ppft = matchFT[1]
+
+  const formData: any = {
+    LoginOptions: 1,
+    DontShowAgain: true,
+    PPFT: ppft,
+  }
+
+  const postOptions: io.PostOptions = {
+    url,
+    cookies: options.cookies,
+    form: formData,
+    proxy: options.proxy,
+  }
+
+  let res
+
+  try {
+    res = await options.httpIo.post(postOptions)
+  } catch (err) {
+    throw httpErrors.RequestError.create(err, postOptions)
+  }
+
+  let responseBody = res.body
+  console.log(responseBody)
+
+  return responseBody
 }
 
 // Get live token from live keys and credentials
